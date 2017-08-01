@@ -24,4 +24,7 @@ require("./routes/authRoutes")(app);
 
 app.listen(process.env.PORT, process.env.IP, function() {
   console.log("server has started");
+  console.log(process.env.PORT);
+  console.log(process.env.IP);
+  console.log(process.env);
 });
