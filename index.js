@@ -10,6 +10,16 @@ mongoose.connect(keys.mongoURI);
 
 const app = express();
 
+app.use(
+  cookieSession({
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    keys: [keys.cookieKey]
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 require("./routes/authRoutes")(app);
 
 app.listen(process.env.PORT, process.env.IP, function() {
