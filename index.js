@@ -22,6 +22,6 @@ app.use(passport.session());
 
 require("./routes/authRoutes")(app);
 
-app.listen(80, "54.244.110.190", function() {
+app.listen(process.env.PORT, process.env.IP, function() {
   console.log("server has started");
 });
