@@ -20,7 +20,8 @@ passport.use(
     {
       returnURL: keys.returnURL,
       realm: keys.realm,
-      apiKey: keys.steamAPI
+      apiKey: keys.steamAPI,
+      proxy: true
     },
     function(identifier, profile, done) {
       User.findOne({ steamId: profile._json.steamid }).then(existingUser => {

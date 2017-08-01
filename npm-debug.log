@@ -2,10 +2,10 @@
 1 verbose cli [ '/home/ubuntu/.nvm/versions/node/v4.8.4/bin/node',
 1 verbose cli   '/home/ubuntu/.nvm/versions/node/v4.8.4/bin/npm',
 1 verbose cli   'run',
-1 verbose cli   'dev' ]
+1 verbose cli   'server' ]
 2 info using npm@2.15.11
 3 info using node@v4.8.4
-4 verbose stack Error: missing script: dev
+4 verbose stack Error: missing script: server
 4 verbose stack     at run (/home/ubuntu/.nvm/versions/node/v4.8.4/lib/node_modules/npm/lib/run-script.js:142:19)
 4 verbose stack     at /home/ubuntu/.nvm/versions/node/v4.8.4/lib/node_modules/npm/lib/run-script.js:58:5
 4 verbose stack     at /home/ubuntu/.nvm/versions/node/v4.8.4/lib/node_modules/npm/node_modules/read-package-json/read-json.js:356:5
@@ -17,10 +17,10 @@
 4 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:380:3)
 5 verbose cwd /home/ubuntu/workspace
 6 error Linux 4.9.17-c9
-7 error argv "/home/ubuntu/.nvm/versions/node/v4.8.4/bin/node" "/home/ubuntu/.nvm/versions/node/v4.8.4/bin/npm" "run" "dev"
+7 error argv "/home/ubuntu/.nvm/versions/node/v4.8.4/bin/node" "/home/ubuntu/.nvm/versions/node/v4.8.4/bin/npm" "run" "server"
 8 error node v4.8.4
 9 error npm  v2.15.11
-10 error missing script: dev
+10 error missing script: server
 11 error If you need help, you may report this error at:
 11 error     <https://github.com/npm/npm/issues>
 12 verbose exit [ 1, true ]
