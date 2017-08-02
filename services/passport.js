@@ -23,16 +23,17 @@ passport.use(
       apiKey: keys.steamAPI,
       proxy: true
     },
-    function(identifier, profile, done) {
-      User.findOne({ steamId: profile._json.steamid }).then(existingUser => {
-        if (existingUser) {
-          done(null, existingUser);
-        } else {
-          new User({ steamId: profile._json.steamid })
-            .save()
-            .then(user => done(null, user));
-        }
+    async function(identifier, profile, done) {
+      const existingUser = await User.findOne({
+        steamId: profile._json.steamid
       });
+
+      if (existingUser) {
+        done(null, existingUser);
+      }
+
+      const user = await new User({ steamId: profile._json.steamid }).save();
+      done(null, user);
     }
   )
 );
