@@ -5,15 +5,22 @@
   "proxy": {
     "/auth/steam": {
       "target": "http://localhost:8081"
+    },
+    "/api/*": {
+      "target": "http://localhost:8081"
     }
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.2",
     "react-scripts": "^1.0.2",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "semantic-ui-css": "^2.2.11",
+    "semantic-ui-react": "^0.71.3"
   },
   "scripts": {
     "start": "react-scripts start",
