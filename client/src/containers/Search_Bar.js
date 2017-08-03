@@ -1,10 +1,16 @@
 import React, { Component } from "react";
+import {} from "semantic-ui-react";
 
 const searchBarStyle = {
-  top: "30vh",
-  width: "50%",
-  left: "25%",
-  right: "50%"
+  form: {
+    position: "relative",
+    top: "25vh",
+    width: "540px",
+    margin: "0 auto"
+  },
+  input: {
+    width: "500px"
+  }
 };
 
 class SearchBar extends Component {
@@ -12,25 +18,35 @@ class SearchBar extends Component {
     super(props);
 
     this.state = { term: "" };
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
   onInputChange(event) {
     console.log(event.target.value);
+    this.setState({ term: event.target.value });
+  }
+
+  onFormSubmit(event) {
+    event.preventDefault();
   }
 
   render() {
     return (
       <div>
-        <form className="ui search">
+        <form onSubmit={this.onFormSubmit} style={searchBarStyle.form}>
           <div className="ui icon input">
             <input
-              className="prompt"
+              style={searchBarStyle.input}
+              className="inverted"
               type="text"
               placeholder="Please login with steam or paste your profile URL"
               value={this.state.term}
               onChange={this.onInputChange}
             />
-            <i className="search icon" />
+            <button className="ui icon button">
+              <i aria-hidden="true" className="search icon" />
+            </button>
           </div>
           <div className="results" />
         </form>

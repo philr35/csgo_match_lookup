@@ -11,6 +11,8 @@ import reducers from "./reducers";
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
+document.body.style.backgroundColor = "whitesmoke";
+
 ReactDOM.render(
   <Provider store={store}>
     <App />
