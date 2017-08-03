@@ -3,8 +3,18 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 
-import Header from "./Header";
-import Landing from "./Landing";
+import SideBar from "./Sidebar";
+import Heading from "./Heading";
+import SearchBar from "../containers/Search_Bar";
+
+const routes = [
+  {
+    path: "/",
+    exact: true,
+    heading: () => <Heading />,
+    search: () => <SearchBar />
+  }
+];
 
 class App extends Component {
   componentDidMount() {
@@ -16,8 +26,23 @@ class App extends Component {
       <div>
         <BrowserRouter>
           <div>
-            <Header />
-            <Route exact path="/" component={Landing} />
+            <SideBar />
+            {routes.map((route, index) =>
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                component={route.heading}
+              />
+            )}
+            {routes.map((route, index) =>
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                component={route.search}
+              />
+            )}
           </div>
         </BrowserRouter>
       </div>
