@@ -13,6 +13,7 @@ class SidebarTopOverlay extends Component {
     switch (this.props.auth) {
       case null:
         return;
+
       case false:
         return (
           <Menu.Item href="/auth/steam" className="right">

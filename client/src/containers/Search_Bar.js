@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import {} from "semantic-ui-react";
+import { connect } from "react-redux";
 
 const searchBarStyle = {
   form: {
     position: "relative",
     top: "25vh",
-    width: "540px",
+    width: "500px",
     margin: "0 auto"
   },
   input: {
@@ -20,6 +20,7 @@ class SearchBar extends Component {
     this.state = { term: "" };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
+    this.onFocus = this.onFocus.bind(this);
   }
 
   onInputChange(event) {
@@ -30,22 +31,37 @@ class SearchBar extends Component {
     event.preventDefault();
   }
 
+  onFocus() {
+    switch (this.props.auth) {
+      case null:
+        return;
+      case false:
+        return;
+      default:
+        const URL = `http://steamcommunity.com/profiles/${this.props.auth
+          .steamId}/`;
+        if (this.state.term.length === 0) {
+          this.setState({ term: URL });
+        }
+    }
+  }
+
   render() {
     return (
       <div>
         <form onSubmit={this.onFormSubmit} style={searchBarStyle.form}>
           <div className="ui icon input">
             <input
+              id="searchInput"
               style={searchBarStyle.input}
               className="inverted"
               type="text"
               placeholder="Please login with steam or paste your profile URL"
               value={this.state.term}
               onChange={this.onInputChange}
+              onFocus={this.onFocus}
             />
-            <button className="ui icon button">
-              <i aria-hidden="true" className="search icon" />
-            </button>
+            <i aria-hidden="true" className="search icon" />
           </div>
           <div className="results" />
         </form>
@@ -54,4 +70,8 @@ class SearchBar extends Component {
   }
 }
 
-export default SearchBar;
+function mapStateToProps({ auth }) {
+  return { auth };
+}
+
+export default connect(mapStateToProps)(SearchBar);
