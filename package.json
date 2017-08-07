@@ -17,11 +17,17 @@
   "dependencies": {
     "concurrently": "^3.5.0",
     "cookie-session": "^2.0.0-beta.2",
+    "crypto": "0.0.3",
+    "csgo": "^1.5.7",
     "express": "^4.15.3",
+    "fs": "0.0.1-security",
     "mongoose": "^4.11.5",
+    "node-steam": "0.0.1",
     "nodemon": "^1.11.0",
     "passport": "^0.3.2",
-    "passport-steam": "^1.0.8"
+    "passport-steam": "^1.0.8",
+    "readline-sync": "^1.4.7",
+    "util": "^0.10.3"
   },
   "devDependencies": {
     "prettier": "^1.5.3"

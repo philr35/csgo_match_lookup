@@ -5,6 +5,7 @@ const passport = require("passport");
 const keys = require("./config/keys");
 require("./models/User");
 require("./services/passport");
+require("./csgo_bot/bot");
 
 mongoose.connect(keys.mongoURI);
 
