@@ -20,7 +20,6 @@ class SearchBar extends Component {
     this.state = { term: "" };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.onFocus = this.onFocus.bind(this);
   }
 
   onInputChange(event) {
@@ -31,19 +30,32 @@ class SearchBar extends Component {
     event.preventDefault();
   }
 
-  onFocus() {
+  renderContent() {
     switch (this.props.auth) {
       case null:
-        return;
+        break;
       case false:
-        return;
+        break;
       default:
         const URL = `http://steamcommunity.com/profiles/${this.props.auth
           .steamId}/`;
         if (this.state.term.length === 0) {
           this.setState({ term: URL });
         }
+        break;
     }
+
+    return (
+      <input
+        id="searchInput"
+        style={searchBarStyle.input}
+        className="inverted"
+        type="text"
+        placeholder="Please login with steam or paste your profile URL"
+        value={this.state.term}
+        onChange={this.onInputChange}
+      />
+    );
   }
 
   render() {
@@ -51,16 +63,7 @@ class SearchBar extends Component {
       <div>
         <form onSubmit={this.onFormSubmit} style={searchBarStyle.form}>
           <div className="ui icon input">
-            <input
-              id="searchInput"
-              style={searchBarStyle.input}
-              className="inverted"
-              type="text"
-              placeholder="Please login with steam or paste your profile URL"
-              value={this.state.term}
-              onChange={this.onInputChange}
-              onFocus={this.onFocus}
-            />
+            {this.renderContent()}
             <i aria-hidden="true" className="search icon" />
           </div>
           <div className="results" />

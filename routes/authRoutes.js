@@ -1,4 +1,6 @@
 const passport = require("passport");
+const middleware = require("../middleware");
+const CSGO = require("../index.js");
 
 module.exports = app => {
   app.get(
@@ -27,6 +29,24 @@ module.exports = app => {
   });
 
   app.get("/api/current_user", (req, res) => {
+    res.send(req.user);
+  });
+
+  app.get("/api/current_user/profile", middleware.isLoggedIn, (req, res) => {
+    CSGO.steamLogon((accountId, match) => {
+      CSGO.setAccountId(accountId);
+      CSGO.setMatch(match);
+      res.send(
+        JSON.stringify(
+          { accountId: CSGO.accountId, matches: CSGO.matches },
+          null,
+          2
+        )
+      );
+    });
+  });
+
+  app.get("/api/current_user/game", (req, res) => {
     res.send(req.user);
   });
 };

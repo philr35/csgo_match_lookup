@@ -29,11 +29,11 @@ passport.use(
       });
 
       if (existingUser) {
-        done(null, existingUser);
+        return done(null, existingUser);
       }
 
       const user = await new User({ steamId: profile._json.steamid }).save();
-      done(null, user);
+      return done(null, user);
     }
   )
 );

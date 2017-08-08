@@ -5,7 +5,14 @@ const passport = require("passport");
 const keys = require("./config/keys");
 require("./models/User");
 require("./services/passport");
-// require("./csgo_bot/bot");
+
+var { CSbot } = require("./csgo_bot/Bot.js");
+var CSGO = new CSbot();
+CSGO.startBot();
+CSGO.setId("436346363");
+// CSGO.steamLogon();
+
+module.exports = CSGO;
 
 mongoose.connect(keys.mongoURI);
 
