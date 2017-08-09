@@ -27,6 +27,8 @@
     "passport": "^0.3.2",
     "passport-steam": "^1.0.8",
     "readline-sync": "^1.4.7",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.1",
     "util": "^0.10.3"
   },
   "devDependencies": {

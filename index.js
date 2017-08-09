@@ -9,7 +9,6 @@ require("./services/passport");
 var { CSbot } = require("./csgo_bot/Bot.js");
 var CSGO = new CSbot();
 CSGO.startBot();
-CSGO.setId("436346363");
 // CSGO.steamLogon();
 
 module.exports = CSGO;

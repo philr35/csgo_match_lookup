@@ -38,7 +38,7 @@ class SearchBar extends Component {
         break;
       default:
         const URL = `http://steamcommunity.com/profiles/${this.props.auth
-          .steamId}/`;
+          .steamInfo.id}/`;
         if (this.state.term.length === 0) {
           this.setState({ term: URL });
         }

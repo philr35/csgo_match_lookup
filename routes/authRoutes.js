@@ -33,6 +33,7 @@ module.exports = app => {
   });
 
   app.get("/api/current_user/profile", middleware.isLoggedIn, (req, res) => {
+    CSGO.setSteamId(req.user.steamId);
     CSGO.steamLogon((accountId, match) => {
       CSGO.setAccountId(accountId);
       CSGO.setMatch(match);
