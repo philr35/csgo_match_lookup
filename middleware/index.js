@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
-const keys = require("../config/keys");
 const User = mongoose.model("users");
-const request = require("request");
+const request = require("request-promise");
 
 const middlewareObj = {};
 
@@ -13,23 +12,20 @@ middlewareObj.isLoggedIn = (req, res, next) => {
   res.redirect("/");
 };
 
-middlewareObj.updateMongo = steamInfo => {
-  // const steamURL = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${keys.steamAPI}&steamids=${}`
-  request("<API Call>", function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(body);
-    }
-  });
-};
+middlewareObj.updateMongo = async (existingUser, steamURL) => {
+  let info = await request(steamURL);
+  info = JSON.parse(info).response.players[0];
 
-middlewareObj.requestSteamApi = (steamId, _callback) => {
-  const steamURL = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${keys.steamAPI}&steamids=${steamId}`;
-  request(steamURL, function(error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var data = JSON.parse(body);
-      return _callback(data.response.players[0]);
-    }
-  });
+  if (existingUser.persona !== info.personaname) {
+    User.findOne({ "steamInfo.id": existingUser.id }, (err, doc) => {
+      if (err) {
+        console.log(err);
+      } else {
+        doc.steamInfo.persona = info.personaname;
+        doc.save();
+      }
+    });
+  }
 };
 
 module.exports = middlewareObj;

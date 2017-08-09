@@ -5,7 +5,7 @@ const keys = require("../config/keys");
 const middleware = require("../middleware");
 const User = mongoose.model("users");
 
-const request = require("request");
+const request = require("request-promise");
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -27,23 +27,19 @@ passport.use(
     },
     async function(identifier, profile, done) {
       const existingUser = await User.findOne({
-        steamInfo: { id: profile._json.steamid }
+        "steamInfo.id": profile._json.steamid
       });
 
+      const steamURL = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${keys.steamAPI}&steamids=${profile
+        ._json.steamid}`;
+
       if (existingUser) {
-        middleware.updateMongo(existingUser);
+        middleware.updateMongo(existingUser.steamInfo, steamURL);
         return done(null, existingUser);
       }
 
-      const steamURL = "hiding url for post";
-
-      const info = await request(steamURL, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-          return JSON.parse(body);
-        }
-      });
-
-      console.log(info);
+      let info = await request(steamURL);
+      info = JSON.parse(info).response.players[0];
 
       const user = await new User({
         steamInfo: {
