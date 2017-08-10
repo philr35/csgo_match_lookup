@@ -26,6 +26,8 @@ middlewareObj.updateMongo = async (existingUser, steamURL) => {
       }
     });
   }
+
+  //add same for avatar, persona state, visibility
 };
 
 module.exports = middlewareObj;

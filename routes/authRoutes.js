@@ -32,18 +32,10 @@ module.exports = app => {
     res.send(req.user);
   });
 
-  app.get("/api/current_user/profile", middleware.isLoggedIn, (req, res) => {
-    CSGO.setSteamId(req.user.steamId);
-    CSGO.steamLogon((accountId, match) => {
-      CSGO.setAccountId(accountId);
+  app.get("/api/current_user/matchinfo", middleware.isLoggedIn, (req, res) => {
+    CSGO.steamLogon(match => {
       CSGO.setMatch(match);
-      res.send(
-        JSON.stringify(
-          { accountId: CSGO.accountId, matches: CSGO.matches },
-          null,
-          2
-        )
-      );
+      return res.send(JSON.stringify(CSGO.matches[0], null, 2));
     });
   });
 
