@@ -8,7 +8,11 @@ const userSchema = new Schema({
     profileUrl: String,
     avatar: String,
     personaState: String,
-    visibility: String
+    visibility: String,
+    countryCode: String,
+    minutesPlayedForever: Number,
+    minutesPlayed2Weeks: Number,
+    friends: []
   },
   collectedInfo: {
     rank: String,

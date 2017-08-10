@@ -3,5 +3,7 @@ module.exports = {
   mongoURI: "mongodb://phillip:deskjet700@ds127963.mlab.com:27963/csgo-11193",
   cookieKey: "agnbg328DFighwg84dk",
   returnURL: "https://csgo-match-whatthephil.c9users.io/auth/steam/return",
-  realm: "https://csgo-match-whatthephil.c9users.io/"
+  realm: "https://csgo-match-whatthephil.c9users.io/",
+  steamUser: "whatthephill",
+  steamPw: "deskjet700"
 };

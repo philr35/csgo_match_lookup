@@ -29,7 +29,7 @@ module.exports = app => {
   });
 
   app.get("/api/current_user", (req, res) => {
-    res.send(req.user);
+    res.send(JSON.stringify(req.user, null, 2));
   });
 
   app.get("/api/current_user/matchinfo", middleware.isLoggedIn, (req, res) => {
