@@ -18,10 +18,10 @@ middlewareObj.updateMongoUser = async (user, reqURI) => {
     user.steamInfo,
     reqURI.minutes[0]
   );
-  await middlewareObj.updateMogoUserOther(
+  await middlewareObj.updateMongoUserOther(
     user.steamInfo,
     reqURI.playerBans,
-    reqURI.friends
+    reqURI.steamFriendsSorted
   );
 };
 
@@ -42,8 +42,10 @@ middlewareObj.updateMongoUserOther = async (
         JSON.stringify(currentUserInfo.friends) !==
         JSON.stringify(newUserFriends)
       ) {
-        doc.steamInfo.friends = newUserFriends;
+        doc.steamInfo.friends = newUserFriends.slice();
       }
+
+      doc.save();
     }
   });
 };
@@ -79,24 +81,26 @@ middlewareObj.updateMongoUserInfo = async (currentUserInfo, newUserInfo) => {
       if (currentUserInfo.persona !== newUserInfo.personaname) {
         doc.steamInfo.persona = newUserInfo.personaname;
       }
-
-      if (currentUserInfo.profileUrl !== newUserInfo.profileUrl) {
-        doc.steamInfo.profileUrl = newUserInfo.profileUrl;
+      if (currentUserInfo.profileUrl !== newUserInfo.profileurl) {
+        doc.steamInfo.profileUrl = newUserInfo.profileurl;
       }
 
       if (currentUserInfo.avatar !== newUserInfo.avatarmedium) {
         doc.steamInfo.avatar = newUserInfo.avatarmedium;
       }
 
-      if (currentUserInfo.personaState !== newUserInfo.personaState) {
-        doc.steamInfo.personaState = newUserInfo.personaState;
+      if (currentUserInfo.personaState !== newUserInfo.personastate) {
+        doc.steamInfo.personaState = newUserInfo.personastate;
       }
 
       if (currentUserInfo.visibility !== newUserInfo.communityvisibilitystate) {
         doc.steamInfo.visibility = newUserInfo.communityvisibilitystate;
       }
 
-      if (currentUserInfo.countryCode !== newUserInfo.loccountrycode) {
+      if (
+        currentUserInfo.countryCode !== newUserInfo.loccountrycode &&
+        newUserInfo.loccountrycode !== undefined
+      ) {
         doc.steamInfo.countryCode = newUserInfo.loccountrycode;
       }
 

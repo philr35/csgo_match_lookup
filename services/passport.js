@@ -45,7 +45,7 @@ passport.use(
           countryCode: "",
           minutesPlayedForever: 0,
           minutesPlayed2Weeks: 0,
-          playerBans: "",
+          playerBans: 0,
           friends: []
         },
         collectedInfo: { rank: "", reports: "0" }

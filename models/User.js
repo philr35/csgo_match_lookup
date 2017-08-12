@@ -13,7 +13,7 @@ const userSchema = new Schema({
     minutesPlayedForever: Number,
     minutesPlayed2Weeks: Number,
     playerBans: Number,
-    friends: []
+    friends: Array
   },
   collectedInfo: {
     rank: String,
