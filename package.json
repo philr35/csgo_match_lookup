@@ -26,6 +26,7 @@
     "nodemon": "^1.11.0",
     "passport": "^0.3.2",
     "passport-steam": "^1.0.8",
+    "performance-now": "^2.1.0",
     "readline-sync": "^1.4.7",
     "request": "^2.81.0",
     "request-promise": "^4.2.1",

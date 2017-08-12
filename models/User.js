@@ -12,6 +12,7 @@ const userSchema = new Schema({
     countryCode: String,
     minutesPlayedForever: Number,
     minutesPlayed2Weeks: Number,
+    playerBans: Number,
     friends: []
   },
   collectedInfo: {
