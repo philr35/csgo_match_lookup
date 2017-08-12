@@ -47,13 +47,13 @@ module.exports = app => {
   });
 
   app.get("/api/current_user", (req, res) => {
-    res.send(JSON.stringify(req.user, null, 2));
+    res.send(req.user, null, 2);
   });
 
   app.get("/api/current_user/matchinfo", middleware.isLoggedIn, (req, res) => {
     CSGO.steamLogon(match => {
       CSGO.setMatch(match);
-      return res.send(JSON.stringify(CSGO.matches[0], null, 2));
+      return res.send(CSGO.matches[0], null, 2);
     });
   });
 
