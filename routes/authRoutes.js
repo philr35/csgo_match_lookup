@@ -2,7 +2,9 @@ const passport = require("passport");
 const middleware = require("../middleware");
 const CSGO = require("../index.js");
 
+const mongoose = require("mongoose");
 const keys = require("../config/keys");
+const User = mongoose.model("users");
 
 module.exports = app => {
   app.get("/auth/steam", passport.authenticate("steam"), (req, res) => {
@@ -59,5 +61,13 @@ module.exports = app => {
 
   app.get("/api/current_user/game", (req, res) => {
     res.send(req.user);
+  });
+
+  app.post("/api/fetchuser", async (req, res) => {
+    const existingUser = await User.findOne({
+      "steamInfo.persona": req.body.persona
+    });
+
+    return res.send(existingUser);
   });
 };
