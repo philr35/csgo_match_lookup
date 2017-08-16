@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import UserSearchResult from "../components/UserSearchResult";
+import { UserDetail } from "../components/UserDetail";
 
 const searchBarStyle = {
   form: {
@@ -22,32 +22,36 @@ class SearchBar extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { term: "", user: "" };
+    this.state = { term: "", userArray: [] };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.renderResults = this.renderResults.bind(this);
   }
 
   onInputChange(event) {
+    document.querySelector("#searchInput").autocomplete = "off";
     this.setState({ term: event.target.value });
   }
 
   async onFormSubmit(event) {
-    //FIGURE OUT IF THIS CAN BE STORES AS A REDUCER
     event.preventDefault();
-    //need to check if its persona, steamid, or url
-    const res = await axios.post("/api/fetchuser", {
+    const users = await axios.post("/api/fetchuser", {
       persona: this.state.term
     });
-    //auto submit form and throttle it
 
-    //FIGURE OUT HOW TO STORE AN OBJECT ####################################
-    this.setState({ user: JSON.stringify(res.data.steamInfo) });
+    let userArray = this.state.userArray;
+    userArray = users.data.map(user => {
+      return user.steamInfo;
+    });
+
+    this.setState({ userArray: userArray });
   }
 
   renderResults() {
-    if (this.state.user) {
-      return <UserSearchResult user={JSON.parse(this.state.user)} />;
+    if (this.state.userArray.length > 0) {
+      return this.state.userArray.map((user, index) =>
+        <UserDetail key={index} user={user} />
+      );
     } else {
       // send flash error that user is not in our database, please enter steamid instead
       return;
@@ -67,7 +71,6 @@ class SearchBar extends Component {
         }
         break;
     }
-
     return (
       <input
         id="searchInput"

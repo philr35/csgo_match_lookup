@@ -68,8 +68,6 @@ module.exports = app => {
       "steamInfo.persona": { $regex: req.body.persona + ".*", $options: "i" }
     }).limit(5);
 
-    console.log(existingUser);
-
-    // return res.send(existingUser);
+    return res.send(existingUser);
   });
 };
