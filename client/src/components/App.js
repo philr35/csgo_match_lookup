@@ -17,6 +17,7 @@ const routes = [
 ];
 
 class App extends Component {
+  //FIGURE OUT WHAT THIS IS DOING
   componentDidMount() {
     this.props.fetchUser();
   }

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
+import UserSearchResult from "../components/UserSearchResult";
 
 const searchBarStyle = {
   form: {
@@ -11,6 +12,9 @@ const searchBarStyle = {
   },
   input: {
     width: "500px"
+  },
+  segment: {
+    paddingTop: "12px"
   }
 };
 
@@ -18,7 +22,7 @@ class SearchBar extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { term: "", user: {} };
+    this.state = { term: "", user: "" };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.renderResults = this.renderResults.bind(this);
@@ -29,26 +33,28 @@ class SearchBar extends Component {
   }
 
   async onFormSubmit(event) {
+    //FIGURE OUT IF THIS CAN BE STORES AS A REDUCER
     event.preventDefault();
+    //need to check if its persona, steamid, or url
     const res = await axios.post("/api/fetchuser", {
       persona: this.state.term
     });
-    this.setState({ user: res.data });
+    //auto submit form and throttle it
+
+    //FIGURE OUT HOW TO STORE AN OBJECT ####################################
+    this.setState({ user: JSON.stringify(res.data.steamInfo) });
   }
 
   renderResults() {
     if (this.state.user) {
-      return (
-        <div>
-          {JSON.stringify(this.state.user.steamInfo)}
-        </div>
-      );
+      return <UserSearchResult user={JSON.parse(this.state.user)} />;
     } else {
+      // send flash error that user is not in our database, please enter steamid instead
       return;
     }
   }
 
-  renderContent() {
+  renderInput() {
     switch (this.props.auth) {
       case null:
         break;
@@ -85,10 +91,10 @@ class SearchBar extends Component {
           style={searchBarStyle.form}
         >
           <div className="ui icon input">
-            {this.renderContent()}
+            {this.renderInput()}
             <i aria-hidden="true" className="search icon" />
           </div>
-          <div className="results">
+          <div className="results" style={searchBarStyle.segment}>
             {this.renderResults()}
           </div>
         </form>

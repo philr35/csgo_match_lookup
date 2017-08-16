@@ -85,8 +85,8 @@ middlewareObj.updateMongoUserInfo = async (currentUserInfo, newUserInfo) => {
         doc.steamInfo.profileUrl = newUserInfo.profileurl;
       }
 
-      if (currentUserInfo.avatar !== newUserInfo.avatarmedium) {
-        doc.steamInfo.avatar = newUserInfo.avatarmedium;
+      if (currentUserInfo.avatar !== newUserInfo.avatarfull) {
+        doc.steamInfo.avatar = newUserInfo.avatarfull;
       }
 
       if (currentUserInfo.personaState !== newUserInfo.personastate) {

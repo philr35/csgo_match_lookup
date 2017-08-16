@@ -16,7 +16,6 @@ module.exports = app => {
     "/auth/steam/return",
     passport.authenticate("steam", { failureRedirect: "/" }),
     async (req, res) => {
-      // Successful authentication, redirect home.
       //add some sort of loading spinner beforehand lateron
       res.redirect("/");
 
@@ -64,10 +63,13 @@ module.exports = app => {
   });
 
   app.post("/api/fetchuser", async (req, res) => {
-    const existingUser = await User.findOne({
-      "steamInfo.persona": req.body.persona
-    });
+    //find all similar named users in mongo db query
+    const existingUser = await User.find({
+      "steamInfo.persona": { $regex: req.body.persona + ".*", $options: "i" }
+    }).limit(5);
 
-    return res.send(existingUser);
+    console.log(existingUser);
+
+    // return res.send(existingUser);
   });
 };
