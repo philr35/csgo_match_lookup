@@ -22,10 +22,26 @@ class SearchBar extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { term: "", userArray: [] };
+    this.state = {
+      term: "",
+      userArray: [],
+      initializedInput: false,
+      userNotFound: false
+    };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.renderResults = this.renderResults.bind(this);
+  }
+
+  componentDidUpdate() {
+    if (
+      this.props.auth &&
+      this.state.term.length === 0 &&
+      !this.state.initializedInput
+    ) {
+      const persona = this.props.auth.steamInfo.persona;
+      this.setState({ term: persona, initializedInput: true });
+    }
   }
 
   onInputChange(event) {
@@ -44,7 +60,11 @@ class SearchBar extends Component {
       return user.steamInfo;
     });
 
-    this.setState({ userArray: userArray });
+    if (userArray.length === 0) {
+      this.setState({ userArray: [], userNotFound: true });
+    } else {
+      this.setState({ userArray: userArray, userNotFound: false });
+    }
   }
 
   renderResults() {
@@ -52,25 +72,15 @@ class SearchBar extends Component {
       return this.state.userArray.map((user, index) =>
         <UserDetail key={index} user={user} />
       );
-    } else {
+    } else if (this.state.userNotFound) {
       // send flash error that user is not in our database, please enter steamid instead
+      console.log("not in database");
+    } else {
       return;
     }
   }
 
   renderInput() {
-    switch (this.props.auth) {
-      case null:
-        break;
-      case false:
-        break;
-      default:
-        const URL = this.props.auth.steamInfo.persona;
-        if (this.state.term.length === 0) {
-          this.setState({ term: URL });
-        }
-        break;
-    }
     return (
       <input
         id="searchInput"
