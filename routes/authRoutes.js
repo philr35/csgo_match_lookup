@@ -54,7 +54,7 @@ module.exports = app => {
   app.get("/api/current_user/matchinfo", middleware.isLoggedIn, (req, res) => {
     CSGO.steamLogon(match => {
       CSGO.setMatch(match);
-      return res.send(CSGO.matches[0], null, 2);
+      res.json(CSGO.matches[0]);
     });
   });
 

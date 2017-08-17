@@ -51,6 +51,7 @@ class SearchBar extends Component {
 
   async onFormSubmit(event) {
     event.preventDefault();
+    //CHECK IF TERM IS PERSONA, STEAMID OR URL
     const users = await axios.post("/api/fetchuser", {
       persona: this.state.term
     });

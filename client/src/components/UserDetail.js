@@ -17,6 +17,10 @@ const resultStyle = {
   
 };
 
+//IMPLEMENT HOVER EFFECT
+//onmouseenter / onmouseleave
+//IMPLEMENT CLICKABLE USERS (BACKEND REQUEST)
+//CHANGE BACK TO EXTENDS COMPONENT
 export const UserDetail = props => {
   return (
     <Segment style={resultStyle.segment}>
