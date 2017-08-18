@@ -14,7 +14,6 @@ const resultStyle = {
     overflow: "hidden",
     padding: "10px"
   }
-  
 };
 
 //IMPLEMENT HOVER EFFECT
@@ -29,11 +28,12 @@ export const UserDetail = props => {
           <Image src={props.user.avatar} fluid />
         </Grid.Column>
         <Grid.Column width={9} style={resultStyle.persona}>
-          <h2 className="ui header">{props.user.persona}</h2>
+          <h3 className="ui header">
+            {props.user.persona}
+          </h3>
         </Grid.Column>
         <Grid.Column width={3} />
       </Grid>
     </Segment>
   );
 };
-

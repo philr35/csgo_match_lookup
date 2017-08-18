@@ -34,6 +34,7 @@ class SearchBar extends Component {
   }
 
   componentDidUpdate() {
+    //INITIALLY SETS THE TERM VALUE AFTER LOGIN
     if (
       this.props.auth &&
       this.state.term.length === 0 &&
@@ -51,16 +52,27 @@ class SearchBar extends Component {
 
   async onFormSubmit(event) {
     event.preventDefault();
-    //CHECK IF TERM IS PERSONA, STEAMID OR URL
-    const users = await axios.post("/api/fetchuser", {
-      persona: this.state.term
-    });
+    let users = {};
+    let userArray = [];
 
-    let userArray = this.state.userArray;
-    userArray = users.data.map(user => {
-      return user.steamInfo;
-    });
+    if (this.state.term.length === 17 && this.state.term.match(/^[0-9]+$/)) {
+      //NEED TO TRIGGER A SPINNING LOADER HERE
+      users = await axios.post("/api/fetchbyuserid", {
+        id: this.state.term
+      });
 
+      userArray.push(users.data[0].steamInfo);
+    } else {
+      users = await axios.post("/api/fetchbypersona", {
+        persona: this.state.term
+      });
+
+      userArray = users.data.map(user => {
+        return user.steamInfo;
+      });
+    }
+
+    //IF USERARRAY IS EMPTY THEN MONGO COULDNT FIND USER THEN RESETS
     if (userArray.length === 0) {
       this.setState({ userArray: [], userNotFound: true });
     } else {

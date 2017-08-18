@@ -1,8 +1,47 @@
 const mongoose = require("mongoose");
 const User = mongoose.model("users");
 const request = require("request-promise");
+const keys = require("../config/keys");
 
 const middlewareObj = {};
+
+middlewareObj.constructMongoUser = async steamId => {
+  const user = await new User({
+    steamInfo: {
+      id: steamId,
+      persona: "",
+      profileUrl: "",
+      avatar: "",
+      personaState: "",
+      visibility: "",
+      countryCode: "",
+      minutesPlayedForever: 0,
+      minutesPlayed2Weeks: 0,
+      playerBans: 0,
+      friends: []
+    },
+    collectedInfo: { rank: "", reports: "0" }
+  }).save();
+
+  return user;
+};
+
+middlewareObj.constructSteamURLS = steamId => {
+  const steamUserInfoURL = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${keys.steamAPI}&steamids=${steamId}`;
+
+  const steamPlayTimeURL = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${keys.steamAPI}&steamid=${steamId}`;
+
+  const steamFriendsList = `http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=${keys.steamAPI}&steamid=${steamId}&relationship=friend`;
+
+  const steamPlayerBans = `http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=${keys.steamAPI}&steamids=${steamId}`;
+
+  return {
+    steamUserInfoURL: steamUserInfoURL,
+    steamPlayTimeURL: steamPlayTimeURL,
+    steamFriendsList: steamFriendsList,
+    steamPlayerBans: steamPlayerBans
+  };
+};
 
 middlewareObj.isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -38,10 +77,7 @@ middlewareObj.updateMongoUserOther = async (
         doc.steamInfo.playerBans = newUserBans;
       }
 
-      if (
-        JSON.stringify(currentUserInfo.friends) !==
-        JSON.stringify(newUserFriends)
-      ) {
+      if (currentUserInfo.friends.length !== newUserFriends.length) {
         doc.steamInfo.friends = newUserFriends.slice();
       }
 
@@ -125,12 +161,22 @@ middlewareObj.requestURIs = async (
     return minutes.appid === 730 ? minutes : null;
   });
 
-  let steamFriends = await request(steamFriendsList);
-  steamFriends = JSON.parse(steamFriends).friendslist.friends;
-
-  let steamFriendsSorted = steamFriends.map(friend => {
-    return friend.steamid;
-  });
+  let steamFriendsSorted = [];
+  if (info.communityvisibilitystate === 3) {
+    try {
+      let steamFriends = await request(steamFriendsList);
+      steamFriends = JSON.parse(steamFriends).friendslist.friends;
+      steamFriendsSorted = steamFriends.map(friend => {
+        return friend.steamid;
+      });
+    } catch (err) {
+      if (err.statusCode === 401) {
+        console.log("401 error");
+      } else {
+        console.log("other type of error?");
+      }
+    }
+  }
 
   let playerBans = await request(steamPlayerBans);
   playerBans = JSON.parse(playerBans).players[0].NumberOfVACBans;

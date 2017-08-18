@@ -1,6 +1,6 @@
 const passport = require("passport");
 const middleware = require("../middleware");
-const CSGO = require("../index.js");
+let CSGO = require("../index.js");
 
 const mongoose = require("mongoose");
 const keys = require("../config/keys");
@@ -16,26 +16,16 @@ module.exports = app => {
     "/auth/steam/return",
     passport.authenticate("steam", { failureRedirect: "/" }),
     async (req, res) => {
-      //add some sort of loading spinner beforehand lateron
+      ///STILL NEED A LOADING SPINNER HERE!!!
       res.redirect("/");
 
-      const steamUserInfoURL = `http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${keys.steamAPI}&steamids=${req
-        .user.steamInfo.id}`;
-
-      const steamPlayTimeURL = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${keys.steamAPI}&steamid=${req
-        .user.steamInfo.id}`;
-
-      const steamFriendsList = `http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=${keys.steamAPI}&steamid=${req
-        .user.steamInfo.id}&relationship=friend`;
-
-      const steamPlayerBans = `http://api.steampowered.com/ISteamUser/GetPlayerBans/v1/?key=${keys.steamAPI}&steamids=${req
-        .user.steamInfo.id}`;
+      const steamURL = middleware.constructSteamURLS(req.user.steamInfo.id);
 
       let reqURI = await middleware.requestURIs(
-        steamUserInfoURL,
-        steamPlayTimeURL,
-        steamFriendsList,
-        steamPlayerBans
+        steamURL.steamUserInfoURL,
+        steamURL.steamPlayTimeURL,
+        steamURL.steamFriendsList,
+        steamURL.steamPlayerBans
       );
 
       await middleware.updateMongoUser(req.user, reqURI);
@@ -62,12 +52,41 @@ module.exports = app => {
     res.send(req.user);
   });
 
-  app.post("/api/fetchuser", async (req, res) => {
+  app.post("/api/fetchbypersona", async (req, res) => {
     //find all similar named users in mongo db query
     const existingUser = await User.find({
       "steamInfo.persona": { $regex: req.body.persona + ".*", $options: "i" }
     }).limit(5);
 
-    return res.send(existingUser);
+    res.send(existingUser);
+  });
+
+  app.post("/api/fetchbyuserid", async (req, res) => {
+    let existingUser = await User.find({
+      "steamInfo.id": req.body.id
+    });
+
+    if (existingUser.length === 0) {
+      //HTTP REQUEST TO WEB API
+      //ADD TO DATABASE AND THEN SEARCH FOR ID AGAIN
+      const steamURL = middleware.constructSteamURLS(req.body.id);
+
+      const reqURI = await middleware.requestURIs(
+        steamURL.steamUserInfoURL,
+        steamURL.steamPlayTimeURL,
+        steamURL.steamFriendsList,
+        steamURL.steamPlayerBans
+      );
+
+      const user = await middleware.constructMongoUser(req.body.id);
+
+      await middleware.updateMongoUser(user, reqURI);
+
+      existingUser = await User.find({
+        "steamInfo.id": req.body.id
+      });
+    }
+
+    res.send(existingUser);
   });
 };
