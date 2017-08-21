@@ -1,3 +1,4 @@
+import _ from "lodash";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -31,6 +32,7 @@ class SearchBar extends Component {
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.renderResults = this.renderResults.bind(this);
+    this.userSearch = this.userSearch.bind(this);
   }
 
   componentDidUpdate() {
@@ -42,29 +44,44 @@ class SearchBar extends Component {
     ) {
       const persona = this.props.auth.steamInfo.persona;
       this.setState({ term: persona, initializedInput: true });
+      this.userSearch(persona);
+    }
+  }
+
+  componentWillMount() {
+    this.delayedCallback = _.debounce(term => {
+      this.toggleLoading(true);
+      this.userSearch(term);
+    }, 400);
+  }
+
+  toggleLoading(toggle) {
+    if (toggle) {
+      document.querySelector(".ui.icon.input").className += " loading";
+    } else {
+      document.querySelector(".ui.icon.input").classList.remove("loading");
     }
   }
 
   onInputChange(event) {
     document.querySelector("#searchInput").autocomplete = "off";
     this.setState({ term: event.target.value });
+    this.delayedCallback(event.target.value);
   }
 
-  async onFormSubmit(event) {
-    event.preventDefault();
-    let users = {};
+  async userSearch(term) {
     let userArray = [];
 
     if (this.state.term.length === 17 && this.state.term.match(/^[0-9]+$/)) {
       //NEED TO TRIGGER A SPINNING LOADER HERE
-      users = await axios.post("/api/fetchbyuserid", {
-        id: this.state.term
+      let users = await axios.post("/api/fetchbyuserid", {
+        id: term
       });
 
       userArray.push(users.data[0].steamInfo);
     } else {
-      users = await axios.post("/api/fetchbypersona", {
-        persona: this.state.term
+      let users = await axios.post("/api/fetchbypersona", {
+        persona: term
       });
 
       userArray = users.data.map(user => {
@@ -76,8 +93,19 @@ class SearchBar extends Component {
     if (userArray.length === 0) {
       this.setState({ userArray: [], userNotFound: true });
     } else {
-      this.setState({ userArray: userArray, userNotFound: false });
+      this.setState({
+        userArray: userArray,
+        userNotFound: false
+      });
     }
+
+    setTimeout(() => {
+      this.toggleLoading(false);
+    }, 350);
+  }
+
+  onFormSubmit(event) {
+    event.preventDefault();
   }
 
   renderResults() {
@@ -86,7 +114,7 @@ class SearchBar extends Component {
         <UserDetail key={index} user={user} />
       );
     } else if (this.state.userNotFound) {
-      // send flash error that user is not in our database, please enter steamid instead
+      // SEND FLASH ERROR TO ENTER STEAMID INSTEAD
       console.log("not in database");
     } else {
       return;
@@ -132,5 +160,4 @@ class SearchBar extends Component {
 function mapStateToProps({ auth }) {
   return { auth };
 }
-
 export default connect(mapStateToProps)(SearchBar);

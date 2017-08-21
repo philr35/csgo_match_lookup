@@ -16,9 +16,6 @@ module.exports = app => {
     "/auth/steam/return",
     passport.authenticate("steam", { failureRedirect: "/" }),
     async (req, res) => {
-      ///STILL NEED A LOADING SPINNER HERE!!!
-      res.redirect("/");
-
       const steamURL = middleware.constructSteamURLS(req.user.steamInfo.id);
 
       let reqURI = await middleware.requestURIs(
@@ -29,6 +26,8 @@ module.exports = app => {
       );
 
       await middleware.updateMongoUser(req.user, reqURI);
+
+      res.redirect("/");
     }
   );
 
@@ -55,7 +54,10 @@ module.exports = app => {
   app.post("/api/fetchbypersona", async (req, res) => {
     //find all similar named users in mongo db query
     const existingUser = await User.find({
-      "steamInfo.persona": { $regex: req.body.persona + ".*", $options: "i" }
+      "steamInfo.persona": {
+        $regex: "^" + req.body.persona,
+        $options: "i"
+      }
     }).limit(5);
 
     res.send(existingUser);
