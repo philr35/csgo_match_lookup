@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Segment, Grid, Image } from "semantic-ui-react";
+import { Segment, Grid, Image, Progress } from "semantic-ui-react";
 
 const resultStyle = {
   avatar: {
@@ -8,7 +8,8 @@ const resultStyle = {
   segment: {
     marginTop: "0px",
     marginBottom: "7px",
-    cursor: "pointer"
+    cursor: "pointer",
+    borderTop: "3px solid rgba(133, 196, 250,.90)"
   },
   persona: {
     overflow: "hidden",
@@ -16,42 +17,73 @@ const resultStyle = {
   }
 };
 
-//IMPLEMENT HOVER EFFECT
-//onmouseenter / onmouseleave//IMPLEMENT CLICKABLE USERS (BACKEND REQUEST)
-//CHANGE BACK TO EXTENDS COMPONENT
-//ADD COLOR TEAL WHEN HOVER
+//IMPLEMENT CLICKABLE USERS (BACKEND REQUEST)
 //ADD SEGMENT LOADING WHEN CLICKED
 class UserDetail extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      color: undefined
+      color: undefined,
+      loading: false,
+      disabled: false
     };
     this.handleHover = this.handleHover.bind(this);
     this.handleExit = this.handleExit.bind(this);
+    this.changeLocation = this.changeLocation.bind(this);
+    this.renderAnimatedTop = this.renderAnimatedTop.bind(this);
   }
 
   handleHover(event) {
-    this.setState({ color: "yellow" });
+    this.setState({ color: "green" });
   }
 
   handleExit(event) {
     this.setState({ color: undefined });
   }
 
+  changeLocation(event) {
+    this.setState({ loading: true, disabled: true });
+    setTimeout(() => {
+      window.location.href = `${window.location.href}livematch/${this.props.user
+        .id}`;
+    }, 1000);
+  }
+
+  renderAnimatedTop() {
+    if (this.state.color) {
+      return (
+        <Progress
+          percent={100}
+          attached="top"
+          color={this.state.color}
+          active
+        />
+      );
+    }
+
+    return;
+  }
+
   render() {
     return (
       <Segment
-        id="segment"
         style={resultStyle.segment}
         onMouseEnter={this.handleHover}
         onMouseLeave={this.handleExit}
-        color={this.state.color}
+        onClick={this.changeLocation}
+        loading={this.state.loading}
+        disabled={this.state.disabled}
       >
+        {this.renderAnimatedTop()}
         <Grid>
           <Grid.Column width={3} style={resultStyle.avatar}>
-            <Image shape="rounded" src={this.props.user.avatar} fluid />
+            <Image
+              shape="rounded"
+              src={this.props.user.avatar}
+              fluid
+              bordered
+            />
           </Grid.Column>
           <Grid.Column width={9} style={resultStyle.persona}>
             <h3 className="ui header">

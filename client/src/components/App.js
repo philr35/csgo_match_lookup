@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions";
 
-import SideBar from "./Sidebar";
+import MenuBar from "./MenuBar";
 import Heading from "./Heading";
 import SearchBar from "../containers/Search_Bar";
 
@@ -26,7 +26,7 @@ class App extends Component {
       <div>
         <BrowserRouter>
           <div>
-            <SideBar />
+            <MenuBar />
             {routes.map((route, index) =>
               <Route
                 key={index}

@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import UserDetail from "../components/UserDetail";
+import { Message, Popup } from "semantic-ui-react";
 
 const searchBarStyle = {
   form: {
@@ -27,12 +28,15 @@ class SearchBar extends Component {
       term: "",
       userArray: [],
       initializedInput: false,
-      userNotFound: false
+      userNotFound: false,
+      showMessage: false,
+      visible: true
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
     this.renderResults = this.renderResults.bind(this);
     this.userSearch = this.userSearch.bind(this);
+    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   componentDidUpdate() {
@@ -74,7 +78,6 @@ class SearchBar extends Component {
     let userArray = [];
 
     if (this.state.term.length === 17 && this.state.term.match(/^[0-9]+$/)) {
-      //NEED TO TRIGGER A SPINNING LOADER HERE
       let users = await axios.post("/api/fetchbyuserid", {
         id: term
       });
@@ -101,6 +104,10 @@ class SearchBar extends Component {
     }
 
     setTimeout(() => {
+      this.setState({ showMessage: true });
+    }, 5500);
+
+    setTimeout(() => {
       this.toggleLoading(false);
     }, 350);
   }
@@ -108,6 +115,10 @@ class SearchBar extends Component {
   onFormSubmit(event) {
     event.preventDefault();
   }
+
+  handleDismiss = () => {
+    this.setState({ visible: false });
+  };
 
   renderResults() {
     if (this.state.userArray.length > 0) {
@@ -124,17 +135,37 @@ class SearchBar extends Component {
 
   renderInput() {
     return (
-      <input
-        id="searchInput"
-        style={searchBarStyle.input}
-        className="inverted"
-        type="text"
-        placeholder="Please login with steam or paste your profile URL"
-        value={this.state.term}
-        onChange={this.onInputChange}
-        name="username"
+      <Popup
+        trigger={
+          <input
+            id="searchInput"
+            style={searchBarStyle.input}
+            className="inverted"
+            type="text"
+            placeholder="Please login with steam or paste your profile URL"
+            value={this.state.term}
+            onChange={this.onInputChange}
+            name="username"
+          />
+        }
+        content="Enter a username, steam ID, or profile URL"
+        on="focus"
       />
     );
+  }
+
+  renderMessage() {
+    if (this.state.showMessage && this.state.visible) {
+      return (
+        <Message
+          info
+          header="Not the user you're looking for?"
+          content="Enter your steam ID instead."
+          onDismiss={this.handleDismiss}
+        />
+      );
+    }
+    return;
   }
 
   render() {
@@ -149,6 +180,7 @@ class SearchBar extends Component {
             {this.renderInput()}
             <i aria-hidden="true" className="search icon" />
           </div>
+          {this.renderMessage()}
           <div className="results" style={searchBarStyle.segment}>
             {this.renderResults()}
           </div>
