@@ -2,7 +2,7 @@ import _ from "lodash";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import { UserDetail } from "../components/UserDetail";
+import UserDetail from "../components/UserDetail";
 
 const searchBarStyle = {
   form: {
@@ -49,6 +49,7 @@ class SearchBar extends Component {
   }
 
   componentWillMount() {
+    //THROTTLES THE SEARCH SUBMIT
     this.delayedCallback = _.debounce(term => {
       this.toggleLoading(true);
       this.userSearch(term);
