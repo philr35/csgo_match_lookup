@@ -17,6 +17,9 @@ const searchBarStyle = {
   },
   segment: {
     paddingTop: "12px"
+  },
+  message: {
+    marginBottom: "0px"
   }
 };
 
@@ -30,7 +33,10 @@ class SearchBar extends Component {
       initializedInput: false,
       userNotFound: false,
       showMessage: false,
-      visible: true
+      persistMessage: true,
+      visible: true,
+      warning: false,
+      persistWarning: true
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -50,14 +56,25 @@ class SearchBar extends Component {
       this.setState({ term: persona, initializedInput: true });
       this.userSearch(persona);
     }
+
+    //fixing the input after updates
+    let input = document.querySelector("#searchInput");
+
+    var strLength = input.value.length * 2;
+    input.setSelectionRange(strLength, strLength);
+
+    input.focus();
+    input.autocomplete = "off";
   }
 
   componentWillMount() {
     //THROTTLES THE SEARCH SUBMIT
     this.delayedCallback = _.debounce(term => {
-      this.toggleLoading(true);
-      this.userSearch(term);
-    }, 400);
+      if (term) {
+        this.toggleLoading(true);
+        this.userSearch(term);
+      }
+    }, 650);
   }
 
   toggleLoading(toggle) {
@@ -69,7 +86,6 @@ class SearchBar extends Component {
   }
 
   onInputChange(event) {
-    document.querySelector("#searchInput").autocomplete = "off";
     this.setState({ term: event.target.value });
     this.delayedCallback(event.target.value);
   }
@@ -91,6 +107,14 @@ class SearchBar extends Component {
       userArray = users.data.map(user => {
         return user.steamInfo;
       });
+
+      if (userArray.length > 0) {
+        setTimeout(() => {
+          this.setState({ showMessage: true });
+        }, 7000);
+      } else {
+        this.setState({ warning: true });
+      }
     }
 
     //IF USERARRAY IS EMPTY THEN MONGO COULDNT FIND USER THEN RESETS
@@ -104,10 +128,6 @@ class SearchBar extends Component {
     }
 
     setTimeout(() => {
-      this.setState({ showMessage: true });
-    }, 5500);
-
-    setTimeout(() => {
       this.toggleLoading(false);
     }, 350);
   }
@@ -117,7 +137,10 @@ class SearchBar extends Component {
   }
 
   handleDismiss = () => {
-    this.setState({ visible: false });
+    this.setState({
+      visible: false,
+      persistMessage: false
+    });
   };
 
   renderResults() {
@@ -134,34 +157,55 @@ class SearchBar extends Component {
   }
 
   renderInput() {
-    return (
-      <Popup
-        trigger={
-          <input
-            id="searchInput"
-            style={searchBarStyle.input}
-            className="inverted"
-            type="text"
-            placeholder="Please login with steam or paste your profile URL"
-            value={this.state.term}
-            onChange={this.onInputChange}
-            name="username"
-          />
-        }
-        content="Enter a username, steam ID, or profile URL"
-        on="focus"
+    const input = (
+      <input
+        id="searchInput"
+        style={searchBarStyle.input}
+        className="inverted"
+        type="text"
+        placeholder="Search up live CSGO matches"
+        value={this.state.term}
+        onChange={this.onInputChange}
+        name="username"
       />
     );
+    if (this.state.term) {
+      return input;
+    } else {
+      return (
+        <Popup
+          trigger={input}
+          wide
+          size="mini"
+          content="Enter a username, steam ID, or profile URL"
+          on="focus"
+        />
+      );
+    }
   }
 
   renderMessage() {
-    if (this.state.showMessage && this.state.visible) {
+    if (
+      this.state.showMessage &&
+      this.state.visible &&
+      (this.state.persistMessage || this.state.persistWarning)
+    ) {
       return (
         <Message
           info
-          header="Not the user you're looking for?"
-          content="Enter your steam ID instead."
+          style={searchBarStyle.message}
+          header={
+            this.state.warning
+              ? "This username was not found in our database"
+              : "Not the user you're looking for?"
+          }
+          content={
+            this.state.warning
+              ? "Try entering their steam ID instead"
+              : "Enter your steam ID instead."
+          }
           onDismiss={this.handleDismiss}
+          warning={this.state.warning}
         />
       );
     }

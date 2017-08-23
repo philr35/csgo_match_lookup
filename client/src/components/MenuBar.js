@@ -1,23 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Sidebar, Menu, Icon, Dropdown } from "semantic-ui-react";
+import { Menu, Icon, Dropdown } from "semantic-ui-react";
 
 const menuStyle = {
   position: "relative",
   borderRadius: "0px"
 };
 
-const options = [
-  { key: 1, text: "Choice 1", value: 1 },
-  { key: 2, text: "Choice 2", value: 2 },
-  { key: 3, text: "Choice 3", value: 3 }
-];
-
 class MenuBar extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   renderContent() {
     switch (this.props.auth) {
       case null:
@@ -62,7 +52,7 @@ class MenuBar extends Component {
           <Icon name="game" />
           Live Games
         </Menu.Item>
-        <Menu.Item href="/">SteamID Finder</Menu.Item>
+        <Menu.Item href="/">SteamId Finder</Menu.Item>
 
         {this.renderContent()}
       </Menu>
