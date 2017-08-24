@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Header } from "semantic-ui-react";
 
 const uiHeaderStyle = {
-  top: "19.5vh",
+  top: "19vh",
   margin: "0",
   padding: "0",
   position: "relative"

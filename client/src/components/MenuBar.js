@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Menu, Icon, Dropdown } from "semantic-ui-react";
+import { Menu, Icon, Dropdown, Modal, TextArea, Form } from "semantic-ui-react";
 
 const menuStyle = {
   position: "relative",
@@ -41,6 +41,8 @@ class MenuBar extends Component {
     }
   }
 
+  renderSteamFinder() {}
+
   render() {
     return (
       <Menu inverted style={menuStyle}>
@@ -52,7 +54,21 @@ class MenuBar extends Component {
           <Icon name="game" />
           Live Games
         </Menu.Item>
-        <Menu.Item href="/">SteamId Finder</Menu.Item>
+        <Modal trigger={<Menu.Item>SteamId Finder</Menu.Item>} size="tiny">
+          <Modal.Content>
+            <Form>
+              <label>Your Steam ID:</label>
+              <TextArea
+                autoHeight
+                value="52852362346359259"
+                rows={1}
+                onChange={e => {
+                  e.preventDefault();
+                }}
+              />
+            </Form>
+          </Modal.Content>
+        </Modal>
 
         {this.renderContent()}
       </Menu>

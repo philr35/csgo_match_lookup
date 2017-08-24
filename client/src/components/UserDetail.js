@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Segment, Grid, Image, Progress } from "semantic-ui-react";
+import {
+  Segment,
+  Grid,
+  Image,
+  Progress,
+  Flag,
+  Icon,
+  Header
+} from "semantic-ui-react";
 
 const resultStyle = {
   avatar: {
@@ -13,12 +21,41 @@ const resultStyle = {
   },
   persona: {
     overflow: "hidden",
-    padding: "10px"
+    padding: "12px",
+    textAlign: "center"
+  },
+  flag: {
+    padding: "10px",
+    transform: "scale(1.3)"
+  },
+  row: {
+    padding: "0px"
+  },
+  bottomRow: {
+    position: "absolute",
+    bottom: "4px",
+    padding: "0px",
+    marginLeft: "105px"
+  },
+  hours: {
+    paddingTop: "6.5px"
   }
 };
 
-//IMPLEMENT CLICKABLE USERS (BACKEND REQUEST)
-//ADD SEGMENT LOADING WHEN CLICKED
+const colorArray = [
+  "red",
+  "orange",
+  "yellow",
+  "olive",
+  "green",
+  "blue",
+  "purple",
+  "violet",
+  "pink",
+  "brown",
+  "grey"
+];
+
 class UserDetail extends Component {
   constructor(props) {
     super(props);
@@ -26,12 +63,26 @@ class UserDetail extends Component {
     this.state = {
       color: undefined,
       loading: false,
-      disabled: false
+      disabled: false,
+      initialColor: ""
     };
     this.handleHover = this.handleHover.bind(this);
     this.handleExit = this.handleExit.bind(this);
     this.changeLocation = this.changeLocation.bind(this);
     this.renderAnimatedTop = this.renderAnimatedTop.bind(this);
+    this.renderFlag = this.renderFlag.bind(this);
+    this.colorPicker = this.colorPicker.bind(this);
+  }
+
+  componentWillMount() {
+    this.colorPicker();
+  }
+
+  colorPicker() {
+    if (!this.state.initialColor) {
+      let color = colorArray[Math.floor(Math.random() * 11)];
+      this.setState({ initialColor: color });
+    }
   }
 
   handleHover(event) {
@@ -65,6 +116,19 @@ class UserDetail extends Component {
     return;
   }
 
+  renderFlag() {
+    if (this.props.user.countryCode) {
+      return (
+        <Flag
+          name={this.props.user.countryCode.toLowerCase()}
+          style={resultStyle.flag}
+        />
+      );
+    } else {
+      return <Icon name="question" style={resultStyle.flag} />;
+    }
+  }
+
   render() {
     return (
       <Segment
@@ -76,21 +140,45 @@ class UserDetail extends Component {
         disabled={this.state.disabled}
       >
         {this.renderAnimatedTop()}
+
         <Grid>
-          <Grid.Column width={3} style={resultStyle.avatar}>
-            <Image
-              shape="rounded"
-              src={this.props.user.avatar}
-              fluid
-              bordered
-            />
-          </Grid.Column>
-          <Grid.Column width={9} style={resultStyle.persona}>
-            <h3 className="ui header">
-              {this.props.user.persona}
-            </h3>
-          </Grid.Column>
-          <Grid.Column width={3} />
+          <Grid.Row style={resultStyle.row}>
+            <Grid.Column width={3} style={resultStyle.avatar}>
+              <Image shape="rounded" src={this.props.user.avatar} fluid />
+            </Grid.Column>
+
+            <Grid.Column width={8} style={resultStyle.persona}>
+              <Grid.Row style={resultStyle.row}>
+                <Header size="medium" color={this.state.initialColor} inverted>
+                  {this.props.user.persona}
+                </Header>
+              </Grid.Row>
+
+              <Grid.Row style={resultStyle.hours}>
+                <Header size="large">
+                  {Math.floor(this.props.user.minutesPlayedForever / 60) +
+                    " hours played"}
+                </Header>
+              </Grid.Row>
+            </Grid.Column>
+
+            <Grid.Column width={5}>
+              <Grid.Row>
+                {this.renderFlag()}
+              </Grid.Row>
+            </Grid.Column>
+
+            <Grid.Row style={resultStyle.bottomRow}>
+              <a
+                id="profileurl"
+                target="_blank"
+                rel="noopener noreferrer"
+                href={this.props.user.profileUrl}
+              >
+                {this.props.user.profileUrl}
+              </a>
+            </Grid.Row>
+          </Grid.Row>
         </Grid>
       </Segment>
     );

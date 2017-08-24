@@ -16,6 +16,13 @@ module.exports = app => {
     "/auth/steam/return",
     passport.authenticate("steam", { failureRedirect: "/" }),
     async (req, res) => {
+      //USE STEAM ID AND CHECK IF RANK IN DB
+      //IF NOT THEN MODAL POPUP
+      //MAKE NEW POST ROUTE
+      //CHECK ROUTE IN APP.JS COMPONENT DID MOUNT
+      //RENDER MODAL IF USER RANK IS EMPTY
+      //DISABLE SEARCH BAR AND OTHER FEATURES
+
       const steamURL = middleware.constructSteamURLS(req.user.steamInfo.id);
 
       let reqURI = await middleware.requestURIs(

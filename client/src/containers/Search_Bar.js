@@ -20,6 +20,9 @@ const searchBarStyle = {
   },
   message: {
     marginBottom: "0px"
+  },
+  popup: {
+    opacity: "0.5"
   }
 };
 
@@ -109,10 +112,12 @@ class SearchBar extends Component {
       });
 
       if (userArray.length > 0) {
+        this.setState({ warning: false });
         setTimeout(() => {
           this.setState({ showMessage: true });
-        }, 7000);
+        }, 5000);
       } else {
+        console.log("got here");
         this.setState({ warning: true });
       }
     }
@@ -175,6 +180,7 @@ class SearchBar extends Component {
       return (
         <Popup
           trigger={input}
+          style={searchBarStyle.popup}
           wide
           size="mini"
           content="Enter a username, steam ID, or profile URL"
@@ -186,7 +192,7 @@ class SearchBar extends Component {
 
   renderMessage() {
     if (
-      this.state.showMessage &&
+      (this.state.showMessage || this.state.warning) &&
       this.state.visible &&
       (this.state.persistMessage || this.state.persistWarning)
     ) {
