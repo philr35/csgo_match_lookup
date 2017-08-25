@@ -68,6 +68,9 @@ class SearchBar extends Component {
 
     input.focus();
     input.autocomplete = "off";
+    input.autocorrect = "off";
+    input.autocapitalize = "off";
+    input.spellcheck = false;
   }
 
   componentWillMount() {
