@@ -21,8 +21,7 @@ const resultStyle = {
   },
   persona: {
     overflow: "hidden",
-    padding: "12px",
-    textAlign: "center"
+    padding: "12px"
   },
   flag: {
     padding: "10px",
@@ -79,10 +78,8 @@ class UserDetail extends Component {
   }
 
   colorPicker() {
-    if (!this.state.initialColor) {
-      let color = colorArray[Math.floor(Math.random() * 11)];
-      this.setState({ initialColor: color });
-    }
+    let color = colorArray[Math.floor(Math.random() * 11)];
+    this.setState({ initialColor: color });
   }
 
   handleHover(event) {

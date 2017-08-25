@@ -2,9 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Menu, Icon, Dropdown, Modal, TextArea, Form } from "semantic-ui-react";
 
+import RankModal from "./RankModal";
+
 const menuStyle = {
-  position: "relative",
-  borderRadius: "0px"
+  menu: {
+    position: "relative",
+    borderRadius: "0px"
+  }
 };
 
 class MenuBar extends Component {
@@ -41,26 +45,16 @@ class MenuBar extends Component {
     }
   }
 
-  renderSteamFinder() {}
-
-  render() {
-    return (
-      <Menu inverted style={menuStyle}>
-        <Menu.Item href="/">
-          <Icon name="home" />
-          Home
-        </Menu.Item>
-        <Menu.Item href="/">
-          <Icon name="game" />
-          Live Games
-        </Menu.Item>
+  renderSteamFinder() {
+    if (this.props.auth) {
+      return (
         <Modal trigger={<Menu.Item>SteamId Finder</Menu.Item>} size="tiny">
           <Modal.Content>
             <Form>
               <label>Your Steam ID:</label>
               <TextArea
                 autoHeight
-                value="52852362346359259"
+                value={this.props.auth.steamInfo.id}
                 rows={1}
                 onChange={e => {
                   e.preventDefault();
@@ -69,8 +63,43 @@ class MenuBar extends Component {
             </Form>
           </Modal.Content>
         </Modal>
+      );
+    }
+  }
+
+  renderRankCheck() {
+    switch (this.props.auth) {
+      case null:
+        return;
+
+      case false:
+        return;
+
+      default:
+        if (!this.props.auth.collectedInfo.rank) {
+          <RankModal />;
+        } else {
+          return;
+        }
+    }
+  }
+
+  render() {
+    return (
+      <Menu inverted style={menuStyle.menu}>
+        <Menu.Item href="/">
+          <Icon name="home" />
+          Home
+        </Menu.Item>
+        <Menu.Item href="/">
+          <Icon name="game" />
+          Live Games
+        </Menu.Item>
+        {this.renderSteamFinder()}
 
         {this.renderContent()}
+
+        {this.renderRankCheck()}
       </Menu>
     );
   }
