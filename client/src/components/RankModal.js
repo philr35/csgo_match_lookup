@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Modal, Button, Icon, Checkbox } from "semantic-ui-react";
 import { connect } from "react-redux";
 
+import axios from "axios";
+
 import RankImage from "./RankImage";
 
 const rankArray = [
@@ -35,9 +37,19 @@ class RankModal extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { hover: false, rank: "", blurred: "" };
+    this.state = {
+      modalOpen: true,
+      rankPicked: false,
+      blurred: "",
+      checkedTos: false,
+      checkedUnranked: false,
+      currentClickedRank: ""
+    };
 
-    this.handleRank = this.handleRank.bind(this);
+    this.handleRankClick = this.handleRankClick.bind(this);
+    this.handleCheckedTos = this.handleCheckedTos.bind(this);
+    this.handleCheckedUnranked = this.handleCheckedUnranked.bind(this);
+    this.buttonClick = this.buttonClick.bind(this);
   }
 
   componentDidMount() {
@@ -46,8 +58,52 @@ class RankModal extends Component {
     }, 50);
   }
 
-  handleRank(rank) {
-    this.setState({ rank: rank });
+  async buttonClick() {
+    if (
+      !!(this.state.rankPicked ^ this.state.checkedUnranked) &&
+      this.state.checkedTos
+    ) {
+      await axios.post("/api/updaterank", {
+        id: this.props.auth.steamInfo.id,
+        rank: this.state.currentClickedRank
+      });
+      this.setState({ modalOpen: false });
+    }
+  }
+
+  handleCheckedTos() {
+    if (this.state.checkedTos) {
+      this.setState({ checkedTos: false });
+    } else {
+      this.setState({ checkedTos: true });
+    }
+  }
+
+  handleCheckedUnranked() {
+    if (this.state.checkedUnranked) {
+      this.setState({ checkedUnranked: false });
+    } else {
+      this.setState({ checkedUnranked: true });
+    }
+  }
+
+  handleRankClick(rank) {
+    rankArray.forEach(rankcheck => {
+      if (rank !== rankcheck) {
+        document.querySelector(`#rank${rankcheck}`).style.cssText +=
+          "filter: grayscale(1); transform: none;";
+      } else {
+        if (this.state.currentClickedRank === rankcheck) {
+          document.querySelector(`#rank${rankcheck}`).style.cssText +=
+            "transform: none; filter: grayscale(1);";
+          this.setState({ currentClickedRank: "", rankPicked: false });
+        } else {
+          document.querySelector(`#rank${rankcheck}`).style.cssText +=
+            "transform: scale(1.5); filter: none;";
+          this.setState({ currentClickedRank: rankcheck, rankPicked: true });
+        }
+      }
+    });
   }
 
   renderRankImage() {
@@ -57,7 +113,7 @@ class RankModal extends Component {
         <RankImage
           rankSrc={rankSrc}
           rank={rank}
-          handleRank={this.handleRank}
+          handleRank={this.handleRankClick}
           key={index}
         />
       );
@@ -79,14 +135,16 @@ class RankModal extends Component {
               style={modalStyle.modal}
               dimmer={this.state.blurred}
               size="small"
-              closeOnRootNodeClick={true}
+              closeOnRootNodeClick={false}
               closeOnEscape={false}
-              defaultOpen
+              open={this.state.modalOpen}
               basic
             >
               <Modal.Header>
                 Please select your current rank
                 <Checkbox
+                  checked={this.state.checkedUnranked}
+                  onChange={this.handleCheckedUnranked}
                   style={{
                     float: "right",
                     marginTop: "7px",
@@ -103,6 +161,8 @@ class RankModal extends Component {
               </Modal.Content>
               <Modal.Actions>
                 <Checkbox
+                  checked={this.state.checkedTos}
+                  onChange={this.handleCheckedTos}
                   style={{ float: "left", paddingTop: "10px" }}
                   label={
                     <label style={{ color: "white" }}>
@@ -112,8 +172,13 @@ class RankModal extends Component {
                   }
                 />
 
-                <Button color="green" inverted style={{ marginRight: "15px" }}>
-                  <Icon name="checkmark" /> Continue ...
+                <Button
+                  onClick={this.buttonClick}
+                  color="green"
+                  inverted
+                  style={{ marginRight: "15px" }}
+                >
+                  <Icon name="checkmark" /> Continue
                 </Button>
               </Modal.Actions>
             </Modal>

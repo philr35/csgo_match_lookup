@@ -24,8 +24,7 @@ const resultStyle = {
     padding: "12px"
   },
   flag: {
-    padding: "10px",
-    transform: "scale(1.3)"
+    paddingLeft: "10px"
   },
   row: {
     padding: "0px"
@@ -38,6 +37,10 @@ const resultStyle = {
   },
   hours: {
     paddingTop: "6.5px"
+  },
+  rank: {
+    padding: "15px",
+    marginTop: "5px"
   }
 };
 
@@ -65,12 +68,14 @@ class UserDetail extends Component {
       disabled: false,
       initialColor: ""
     };
+
     this.handleHover = this.handleHover.bind(this);
     this.handleExit = this.handleExit.bind(this);
     this.changeLocation = this.changeLocation.bind(this);
     this.renderAnimatedTop = this.renderAnimatedTop.bind(this);
     this.renderFlag = this.renderFlag.bind(this);
     this.colorPicker = this.colorPicker.bind(this);
+    this.renderRank = this.renderRank.bind(this);
   }
 
   componentWillMount() {
@@ -96,6 +101,17 @@ class UserDetail extends Component {
       window.location.href = `${window.location.href}livematch/${this.props.user
         .id}`;
     }, 1000);
+  }
+
+  renderRank() {
+    if (this.props.collectedInfo.rank) {
+      return (
+        <Image
+          style={resultStyle.rank}
+          src={require(`../ranks/${this.props.collectedInfo.rank}.png`)}
+        />
+      );
+    }
   }
 
   renderAnimatedTop() {
@@ -148,6 +164,7 @@ class UserDetail extends Component {
               <Grid.Row style={resultStyle.row}>
                 <Header size="medium" color={this.state.initialColor} inverted>
                   {this.props.user.persona}
+                  {this.renderFlag()}
                 </Header>
               </Grid.Row>
 
@@ -161,7 +178,7 @@ class UserDetail extends Component {
 
             <Grid.Column width={5}>
               <Grid.Row>
-                {this.renderFlag()}
+                {this.renderRank()}
               </Grid.Row>
             </Grid.Column>
 

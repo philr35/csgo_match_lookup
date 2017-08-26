@@ -32,14 +32,16 @@ class SearchBar extends Component {
 
     this.state = {
       term: "",
-      userArray: [],
+      userArraySteamInfo: [],
+      userArrayCollectedInfo: [],
       initializedInput: false,
       userNotFound: false,
       showMessage: false,
       persistMessage: true,
       visible: true,
       warning: false,
-      persistWarning: true
+      persistWarning: true,
+      bySteamId: false
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
@@ -98,20 +100,27 @@ class SearchBar extends Component {
 
   async userSearch(term) {
     let userArray = [];
+    let collectedInfo = [];
 
     if (this.state.term.length === 17 && this.state.term.match(/^[0-9]+$/)) {
-      let users = await axios.post("/api/fetchbyuserid", {
+      let user = await axios.post("/api/fetchbyuserid", {
         id: term
       });
 
-      userArray.push(users.data[0].steamInfo);
+      this.setState({ bySteamId: true });
+
+      userArray.push(user.data[0].steamInfo);
+      collectedInfo.push(user.data[0].collectedInfo);
     } else {
       let users = await axios.post("/api/fetchbypersona", {
         persona: term
       });
 
-      userArray = users.data.map(user => {
-        return user.steamInfo;
+      this.setState({ bySteamId: false });
+
+      users.data.forEach(user => {
+        userArray.push(user.steamInfo);
+        collectedInfo.push(user.collectedInfo);
       });
 
       if (userArray.length > 0) {
@@ -120,17 +129,21 @@ class SearchBar extends Component {
           this.setState({ showMessage: true });
         }, 5000);
       } else {
-        console.log("got here");
         this.setState({ warning: true });
       }
     }
 
     //IF USERARRAY IS EMPTY THEN MONGO COULDNT FIND USER THEN RESETS
     if (userArray.length === 0) {
-      this.setState({ userArray: [], userNotFound: true });
+      this.setState({
+        userArraySteamInfo: [],
+        userArrayCollectedInfo: [],
+        userNotFound: true
+      });
     } else {
       this.setState({
-        userArray: userArray,
+        userArraySteamInfo: userArray,
+        userArrayCollectedInfo: collectedInfo,
         userNotFound: false
       });
     }
@@ -152,9 +165,13 @@ class SearchBar extends Component {
   };
 
   renderResults() {
-    if (this.state.userArray.length > 0) {
-      return this.state.userArray.map((user, index) =>
-        <UserDetail key={index} user={user} />
+    if (this.state.userArraySteamInfo.length > 0) {
+      return this.state.userArraySteamInfo.map((user, index) =>
+        <UserDetail
+          key={index}
+          user={user}
+          collectedInfo={this.state.userArrayCollectedInfo[index]}
+        />
       );
     } else if (this.state.userNotFound) {
       // SEND FLASH ERROR TO ENTER STEAMID INSTEAD
@@ -182,6 +199,7 @@ class SearchBar extends Component {
     } else {
       return (
         <Popup
+          inverted
           trigger={input}
           style={searchBarStyle.popup}
           wide
@@ -197,7 +215,8 @@ class SearchBar extends Component {
     if (
       (this.state.showMessage || this.state.warning) &&
       this.state.visible &&
-      (this.state.persistMessage || this.state.persistWarning)
+      (this.state.persistMessage || this.state.persistWarning) &&
+      !this.state.bySteamId
     ) {
       return (
         <Message

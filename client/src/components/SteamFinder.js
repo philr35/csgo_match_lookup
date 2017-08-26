@@ -22,6 +22,7 @@ class SteamFinder extends Component {
         on="click"
         size="mini"
         position="top right"
+        offset={-40}
         inverted
       />
     );
@@ -33,6 +34,7 @@ class SteamFinder extends Component {
         <Modal
           trigger={<Menu.Item>SteamId Finder</Menu.Item>}
           size="tiny"
+          closeIcon="close"
           style={{ marginTop: "-300px" }}
         >
           <Modal.Content>

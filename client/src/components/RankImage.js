@@ -19,7 +19,8 @@ class RankImage extends Component {
 
     this.state = {
       rank: this.props.rank,
-      hover: false
+      hover: false,
+      clicked: false
     };
 
     this.handleExit = this.handleExit.bind(this);
@@ -28,6 +29,7 @@ class RankImage extends Component {
   }
 
   handleClick(event) {
+    this.setState({ clicked: true });
     this.props.handleRank(this.state.rank);
   }
 
@@ -36,7 +38,9 @@ class RankImage extends Component {
   }
 
   handleExit(event) {
-    this.setState({ hover: false });
+    if (!this.state.clicked) {
+      this.setState({ hover: false });
+    }
   }
 
   handleDrag(event) {
@@ -47,6 +51,7 @@ class RankImage extends Component {
     return (
       <Image
         src={this.props.rankSrc}
+        id={"rank" + this.state.rank}
         size="tiny"
         inline
         shape="rounded"

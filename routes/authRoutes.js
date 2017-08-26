@@ -98,4 +98,22 @@ module.exports = app => {
 
     res.send(existingUser);
   });
+
+  app.post("/api/updaterank", async (req, res) => {
+    let existingUser = await User.findOne(
+      {
+        "steamInfo.id": req.body.id
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+        } else {
+          doc.collectedInfo.rank = req.body.rank;
+          doc.save();
+        }
+      }
+    );
+
+    res.send(existingUser);
+  });
 };

@@ -3,8 +3,6 @@ import { Header } from "semantic-ui-react";
 
 const uiHeaderStyle = {
   top: "19vh",
-  margin: "0",
-  padding: "0",
   position: "relative"
 };
 
