@@ -61,7 +61,7 @@ class SteamFinder extends Component {
         </Modal>
       );
     } else {
-      return <Menu.Item>SteamId Finder</Menu.Item>;
+      return <div />;
     }
   }
 

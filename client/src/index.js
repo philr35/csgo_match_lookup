@@ -11,7 +11,8 @@ import reducers from "./reducers";
 
 const store = createStore(reducers, {}, applyMiddleware(reduxThunk));
 
-document.body.style.backgroundColor = "whitesmoke";
+document.body.style.backgroundImage =
+  "linear-gradient(60deg, #29323c 0%, #485563 100%)";
 
 ReactDOM.render(
   <Provider store={store}>

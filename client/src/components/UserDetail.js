@@ -11,13 +11,14 @@ import {
 
 const resultStyle = {
   avatar: {
-    padding: "4px"
+    padding: "10px",
+    borderBottomLeftRadius: ".28571429rem",
+    borderTopLeftRadius: ".28571429rem"
   },
   segment: {
     marginTop: "0px",
     marginBottom: "7px",
-    cursor: "pointer",
-    borderTop: "3px solid rgba(133, 196, 250,.90)"
+    cursor: "pointer"
   },
   persona: {
     overflow: "hidden",
@@ -63,10 +64,10 @@ class UserDetail extends Component {
     super(props);
 
     this.state = {
-      color: undefined,
       loading: false,
       disabled: false,
-      initialColor: ""
+      initialColor: "",
+      hover: false
     };
 
     this.handleHover = this.handleHover.bind(this);
@@ -88,11 +89,11 @@ class UserDetail extends Component {
   }
 
   handleHover(event) {
-    this.setState({ color: "green" });
+    this.setState({ hover: true });
   }
 
   handleExit(event) {
-    this.setState({ color: undefined });
+    this.setState({ hover: false });
   }
 
   changeLocation(event) {
@@ -119,7 +120,7 @@ class UserDetail extends Component {
       return (
         <Progress
           percent={100}
-          attached="top"
+          attached="right"
           color={this.state.color}
           active
         />
@@ -143,6 +144,12 @@ class UserDetail extends Component {
   }
 
   render() {
+    if (this.state.hover) {
+      resultStyle.segment.background = "whitesmoke";
+    } else {
+      resultStyle.segment.background = "";
+    }
+
     return (
       <Segment
         style={resultStyle.segment}
@@ -151,13 +158,15 @@ class UserDetail extends Component {
         onClick={this.changeLocation}
         loading={this.state.loading}
         disabled={this.state.disabled}
+        className="persona"
       >
-        {this.renderAnimatedTop()}
-
-        <Grid>
+        <Grid divided>
           <Grid.Row style={resultStyle.row}>
             <Grid.Column width={3} style={resultStyle.avatar}>
-              <Image shape="rounded" src={this.props.user.avatar} fluid />
+              <Image
+                src={this.props.user.avatar}
+                style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)" }}
+              />
             </Grid.Column>
 
             <Grid.Column width={8} style={resultStyle.persona}>
@@ -189,7 +198,7 @@ class UserDetail extends Component {
                 rel="noopener noreferrer"
                 href={this.props.user.profileUrl}
               >
-                {this.props.user.profileUrl}
+                Steam Community Profile
               </a>
             </Grid.Row>
           </Grid.Row>

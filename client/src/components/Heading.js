@@ -10,7 +10,7 @@ class Heading extends Component {
   render() {
     return (
       <div>
-        <Header as="h2" textAlign="center" style={uiHeaderStyle}>
+        <Header as="h2" textAlign="center" style={uiHeaderStyle} inverted>
           Find out who's on your team
         </Header>
       </div>

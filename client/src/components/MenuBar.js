@@ -48,7 +48,7 @@ class MenuBar extends Component {
 
   render() {
     return (
-      <Menu inverted style={menuStyle.menu}>
+      <Menu style={menuStyle.menu}>
         <Menu.Item href="/">
           <Icon name="home" />
           Home
