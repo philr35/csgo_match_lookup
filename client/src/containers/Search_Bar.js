@@ -118,7 +118,7 @@ class SearchBar extends Component {
 
       this.setState({ bySteamId: false });
 
-      users.data.forEach(user => {
+      users.data.forEach((user, index) => {
         userArray.push(user.steamInfo);
         collectedInfo.push(user.collectedInfo);
       });
@@ -166,13 +166,17 @@ class SearchBar extends Component {
 
   renderResults() {
     if (this.state.userArraySteamInfo.length > 0) {
-      return this.state.userArraySteamInfo.map((user, index) =>
-        <UserDetail
-          key={index}
-          user={user}
-          collectedInfo={this.state.userArrayCollectedInfo[index]}
-        />
-      );
+      let users = this.state.userArraySteamInfo.map((user, index) => {
+        return (
+          <UserDetail
+            key={index}
+            user={user}
+            collectedInfo={this.state.userArrayCollectedInfo[index]}
+          />
+        );
+      });
+
+      return users;
     } else if (this.state.userNotFound) {
       // SEND FLASH ERROR TO ENTER STEAMID INSTEAD
       console.log("not in database");
@@ -233,7 +237,7 @@ class SearchBar extends Component {
               : "Enter your steam ID instead."
           }
           onDismiss={this.handleDismiss}
-          warning={this.state.warning}
+          color="brown"
         />
       );
     }

@@ -9,6 +9,27 @@ import {
   Header
 } from "semantic-ui-react";
 
+const rankNames = [
+  "SILVER I",
+  "SILVER II",
+  "SILVER III",
+  "SILVER IV",
+  "SILVER ELITE",
+  "SILVER ELITE MASTER",
+  "GOLD NOVA I",
+  "GOLD NOVA II",
+  "GOLD NOVA III",
+  "GOLD NOVA MASTER",
+  "MASTER GUARDIAN I",
+  "MASTER GUARDIAN II",
+  "MASTER GUARDIAN ELITE",
+  "DISTINGUISHED MASTER GUARDIAN",
+  "LEGENDARY EAGLE",
+  "LEGENDARY EAGLE MASTER",
+  "SUPREME MASTER FIRST CLASS",
+  "THE GLOBAL ELITE"
+];
+
 const resultStyle = {
   avatar: {
     padding: "10px",
@@ -40,8 +61,12 @@ const resultStyle = {
     paddingTop: "6.5px"
   },
   rank: {
-    padding: "15px",
-    marginTop: "5px"
+    transform: "scale(0.7)",
+    marginTop: "8px"
+  },
+  rankText: {
+    margin: "0px",
+    fontSize: "0.9em"
   }
 };
 
@@ -107,10 +132,23 @@ class UserDetail extends Component {
   renderRank() {
     if (this.props.collectedInfo.rank) {
       return (
-        <Image
-          style={resultStyle.rank}
-          src={require(`../ranks/${this.props.collectedInfo.rank}.png`)}
-        />
+        <div>
+          <Image
+            style={resultStyle.rank}
+            src={require(`../ranks/${this.props.collectedInfo.rank}.png`)}
+          />
+          <Header size="tiny" textAlign="center" style={resultStyle.rankText}>
+            {rankNames[this.props.collectedInfo.rank - 1]}
+          </Header>
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          <Header size="tiny" textAlign="center" style={resultStyle.rankText}>
+            NOT RANKED
+          </Header>
+        </div>
       );
     }
   }
