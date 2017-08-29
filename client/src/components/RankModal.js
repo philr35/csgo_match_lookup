@@ -40,7 +40,6 @@ class RankModal extends Component {
     this.state = {
       modalOpen: true,
       rankPicked: false,
-      blurred: "",
       checkedTos: false,
       checkedUnranked: false,
       currentClickedRank: ""
@@ -53,9 +52,10 @@ class RankModal extends Component {
   }
 
   componentDidMount() {
+    this.setState({ checkedTos: true });
     setTimeout(() => {
-      this.setState({ blurred: "blurring" });
-    }, 50);
+      document.body.style.paddingBottom = "1px";
+    }, 300);
   }
 
   async buttonClick() {
@@ -133,7 +133,7 @@ class RankModal extends Component {
           return (
             <Modal
               style={modalStyle.modal}
-              dimmer={this.state.blurred}
+              dimmer="blurring"
               size="small"
               closeOnRootNodeClick={false}
               closeOnEscape={false}

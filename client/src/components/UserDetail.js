@@ -1,5 +1,13 @@
 import React, { Component } from "react";
-import { Segment, Grid, Image, Flag, Icon, Header } from "semantic-ui-react";
+import {
+  Segment,
+  Grid,
+  Image,
+  Flag,
+  Icon,
+  Header,
+  Label
+} from "semantic-ui-react";
 
 const rankNames = [
   "SILVER I",
@@ -56,18 +64,16 @@ const resultStyle = {
   },
   rank: {
     position: "absolute",
-    transform: "scale(2.3)",
+    transform: "scale(1.5)",
     zIndex: "2",
-    paddingBottom: "30px",
-    marginLeft: "100px",
-    filter: "blur(1.2px)"
+    marginLeft: "20px",
+    top: "10px"
   },
   rankText: {
-    margin: "0px",
+    margin: "30px 0px 0px",
     color: "white",
     zIndex: "3",
-    position: "relative",
-    marginTop: "5px",
+    position: "absolute",
     textAlign: "center",
     textRendering: "optimizeLegibility",
     backgroundColor: "black"
