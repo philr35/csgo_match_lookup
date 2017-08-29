@@ -80,6 +80,7 @@ module.exports = app => {
       //ADD TO DATABASE AND THEN SEARCH FOR ID AGAIN
       const steamURL = middleware.constructSteamURLS(req.body.id);
 
+      //NEED TO ADD UPDATE FOR COLLECTED INFO
       const reqURI = await middleware.requestURIs(
         steamURL.steamUserInfoURL,
         steamURL.steamPlayTimeURL,

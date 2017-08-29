@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  Segment,
-  Grid,
-  Image,
-  Progress,
-  Flag,
-  Icon,
-  Header
-} from "semantic-ui-react";
+import { Segment, Grid, Image, Flag, Icon, Header } from "semantic-ui-react";
 
 const rankNames = [
   "SILVER I",
@@ -39,11 +31,13 @@ const resultStyle = {
   segment: {
     marginTop: "0px",
     marginBottom: "7px",
-    cursor: "pointer"
+    cursor: "pointer",
+    border: "0px solid white",
+    boxShadow: "0 0 8px black"
   },
   persona: {
     overflow: "hidden",
-    padding: "12px"
+    padding: "10px"
   },
   flag: {
     paddingLeft: "10px"
@@ -61,28 +55,24 @@ const resultStyle = {
     paddingTop: "6.5px"
   },
   rank: {
-    transform: "scale(0.7)",
-    marginTop: "8px"
+    position: "absolute",
+    transform: "scale(2.3)",
+    zIndex: "2",
+    paddingBottom: "30px",
+    marginLeft: "100px",
+    filter: "blur(1.2px)"
   },
   rankText: {
     margin: "0px",
-    fontSize: "0.9em"
+    color: "white",
+    zIndex: "3",
+    position: "relative",
+    marginTop: "5px",
+    textAlign: "center",
+    textRendering: "optimizeLegibility",
+    backgroundColor: "black"
   }
 };
-
-const colorArray = [
-  "red",
-  "orange",
-  "yellow",
-  "olive",
-  "green",
-  "blue",
-  "purple",
-  "violet",
-  "pink",
-  "brown",
-  "grey"
-];
 
 class UserDetail extends Component {
   constructor(props) {
@@ -91,26 +81,14 @@ class UserDetail extends Component {
     this.state = {
       loading: false,
       disabled: false,
-      initialColor: "",
       hover: false
     };
 
     this.handleHover = this.handleHover.bind(this);
     this.handleExit = this.handleExit.bind(this);
     this.changeLocation = this.changeLocation.bind(this);
-    this.renderAnimatedTop = this.renderAnimatedTop.bind(this);
     this.renderFlag = this.renderFlag.bind(this);
-    this.colorPicker = this.colorPicker.bind(this);
     this.renderRank = this.renderRank.bind(this);
-  }
-
-  componentWillMount() {
-    this.colorPicker();
-  }
-
-  colorPicker() {
-    let color = colorArray[Math.floor(Math.random() * 11)];
-    this.setState({ initialColor: color });
   }
 
   handleHover(event) {
@@ -132,8 +110,9 @@ class UserDetail extends Component {
   renderRank() {
     if (this.props.collectedInfo.rank) {
       return (
-        <div>
+        <div style={{ verticalAlign: "middle", display: "table-cell" }}>
           <Image
+            fluid
             style={resultStyle.rank}
             src={require(`../ranks/${this.props.collectedInfo.rank}.png`)}
           />
@@ -153,21 +132,6 @@ class UserDetail extends Component {
     }
   }
 
-  renderAnimatedTop() {
-    if (this.state.color) {
-      return (
-        <Progress
-          percent={100}
-          attached="right"
-          color={this.state.color}
-          active
-        />
-      );
-    }
-
-    return;
-  }
-
   renderFlag() {
     if (this.props.user.countryCode) {
       return (
@@ -182,15 +146,12 @@ class UserDetail extends Component {
   }
 
   render() {
-    if (this.state.hover) {
-      resultStyle.segment.background = "whitesmoke";
-    } else {
-      resultStyle.segment.background = "";
-    }
-
     return (
       <Segment
-        style={resultStyle.segment}
+        style={{
+          backgroundColor: this.state.hover ? "gainsboro" : "",
+          ...resultStyle.segment
+        }}
         onMouseEnter={this.handleHover}
         onMouseLeave={this.handleExit}
         onClick={this.changeLocation}
@@ -198,33 +159,55 @@ class UserDetail extends Component {
         disabled={this.state.disabled}
         className="persona"
       >
-        <Grid divided>
-          <Grid.Row style={resultStyle.row}>
+        <Grid>
+          <Grid.Row
+            style={{
+              ...resultStyle.row,
+              margin: "2px"
+            }}
+          >
             <Grid.Column width={3} style={resultStyle.avatar}>
               <Image
                 src={this.props.user.avatar}
-                style={{ boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)" }}
+                style={{ filter: "drop-shadow(0px 0px 1px black)" }}
               />
             </Grid.Column>
 
-            <Grid.Column width={8} style={resultStyle.persona}>
+            <Grid.Column width={7} style={resultStyle.persona}>
               <Grid.Row style={resultStyle.row}>
-                <Header size="medium" color={this.state.initialColor} inverted>
+                <Header
+                  size="medium"
+                  inverted
+                  style={{
+                    color: "rgb(66, 111, 158)",
+                    whiteSpace: "nowrap"
+                  }}
+                >
                   {this.props.user.persona}
-                  {this.renderFlag()}
                 </Header>
               </Grid.Row>
 
               <Grid.Row style={resultStyle.hours}>
-                <Header size="large">
+                <Header size="large" style={{ whiteSpace: "nowrap" }}>
                   {Math.floor(this.props.user.minutesPlayedForever / 60) +
                     " hours played"}
                 </Header>
               </Grid.Row>
             </Grid.Column>
 
-            <Grid.Column width={5}>
-              <Grid.Row>
+            <Grid.Column
+              width={6}
+              style={{
+                zIndex: "1",
+                overflow: "hidden",
+                borderTopRightRadius: ".28571429rem",
+                borderBottomRightRadius: ".28571429rem",
+                paddingLeft: "0px",
+                borderLeft: "4px solid pink",
+                borderRadius: "0.285714rem"
+              }}
+            >
+              <Grid.Row style={{ display: "table", height: "100%" }}>
                 {this.renderRank()}
               </Grid.Row>
             </Grid.Column>
@@ -238,6 +221,7 @@ class UserDetail extends Component {
               >
                 Steam Community Profile
               </a>
+              {this.renderFlag()}
             </Grid.Row>
           </Grid.Row>
         </Grid>
