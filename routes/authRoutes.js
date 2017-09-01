@@ -16,13 +16,6 @@ module.exports = app => {
     "/auth/steam/return",
     passport.authenticate("steam", { failureRedirect: "/" }),
     async (req, res) => {
-      //USE STEAM ID AND CHECK IF RANK IN DB
-      //IF NOT THEN MODAL POPUP
-      //MAKE NEW POST ROUTE
-      //CHECK ROUTE IN APP.JS COMPONENT DID MOUNT
-      //RENDER MODAL IF USER RANK IS EMPTY
-      //DISABLE SEARCH BAR AND OTHER FEATURES
-
       const steamURL = middleware.constructSteamURLS(req.user.steamInfo.id);
 
       let reqURI = await middleware.requestURIs(
@@ -47,7 +40,9 @@ module.exports = app => {
     res.send(req.user, null, 2);
   });
 
-  app.get("/api/current_user/matchinfo", middleware.isLoggedIn, (req, res) => {
+  app.post("/api/current_user/matchinfo", middleware.isLoggedIn, (req, res) => {
+    console.log("first: " + req.body.steamid);
+    CSGO.setSteamId(req.body.steamid);
     CSGO.steamLogon(match => {
       CSGO.setMatch(match);
       res.json(CSGO.matches[0]);

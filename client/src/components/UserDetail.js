@@ -95,6 +95,11 @@ class UserDetail extends Component {
     this.changeLocation = this.changeLocation.bind(this);
     this.renderFlag = this.renderFlag.bind(this);
     this.renderRank = this.renderRank.bind(this);
+    this.handlePropagation = this.handlePropagation.bind(this);
+  }
+
+  handlePropagation(event) {
+    event.stopPropagation();
   }
 
   handleHover(event) {
@@ -224,6 +229,7 @@ class UserDetail extends Component {
                 target="_blank"
                 rel="noopener noreferrer"
                 href={this.props.user.profileUrl}
+                onClick={this.handlePropagation}
               >
                 Steam Community Profile
               </a>
