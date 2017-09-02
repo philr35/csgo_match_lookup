@@ -44,8 +44,7 @@ module.exports = app => {
     console.log("first: " + req.body.steamid);
     CSGO.setSteamId(req.body.steamid);
     CSGO.steamLogon(match => {
-      CSGO.setMatch(match);
-      res.json(CSGO.matches[0]);
+      res.json(match);
     });
   });
 

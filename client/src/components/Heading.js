@@ -2,18 +2,16 @@ import React, { Component } from "react";
 import { Header } from "semantic-ui-react";
 
 const uiHeaderStyle = {
-  top: "19vh",
+  top: "15vh",
   position: "relative"
 };
 
 class Heading extends Component {
   render() {
     return (
-      <div>
-        <Header as="h2" textAlign="center" style={uiHeaderStyle} inverted>
-          Find out who's on your team
-        </Header>
-      </div>
+      <Header as="h2" textAlign="center" style={uiHeaderStyle} inverted>
+        Find out who's on your team
+      </Header>
     );
   }
 }

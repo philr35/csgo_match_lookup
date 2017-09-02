@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  Segment,
-  Grid,
-  Image,
-  Flag,
-  Icon,
-  Header,
-  Label
-} from "semantic-ui-react";
+import { Segment, Grid, Image, Flag, Icon, Header } from "semantic-ui-react";
 
 const rankNames = [
   "SILVER I",
@@ -41,7 +33,9 @@ const resultStyle = {
     marginBottom: "7px",
     cursor: "pointer",
     border: "0px solid white",
-    boxShadow: "0 0 8px black"
+    boxShadow: "0 0 8px black",
+    overflow: "hidden",
+    borderRight: "6px solid grey"
   },
   persona: {
     overflow: "hidden",
@@ -63,20 +57,19 @@ const resultStyle = {
     paddingTop: "6.5px"
   },
   rank: {
-    position: "absolute",
-    transform: "scale(1.5)",
     zIndex: "2",
-    marginLeft: "20px",
-    top: "10px"
+    filter: "grayscale(0.5)",
+    opacity: "0.4",
+    marginRight: "6px"
   },
   rankText: {
-    margin: "30px 0px 0px",
+    margin: "25px 0px 0px",
     color: "white",
     zIndex: "3",
-    position: "absolute",
     textAlign: "center",
     textRendering: "optimizeLegibility",
-    backgroundColor: "black"
+    backgroundColor: "black",
+    opacity: "0.4"
   }
 };
 
@@ -96,6 +89,18 @@ class UserDetail extends Component {
     this.renderFlag = this.renderFlag.bind(this);
     this.renderRank = this.renderRank.bind(this);
     this.handlePropagation = this.handlePropagation.bind(this);
+  }
+
+  componentDidMount() {
+    let personas = document.querySelectorAll(".persona");
+
+    personas.forEach(persona => {
+      persona.style.borderRight = `6px solid rgb(
+        ${Math.floor(Math.random() * 240)},
+        ${Math.floor(Math.random() * 240)},
+        ${Math.floor(Math.random() * 240)}
+      )`;
+    });
   }
 
   handlePropagation(event) {
@@ -121,17 +126,25 @@ class UserDetail extends Component {
   renderRank() {
     if (this.props.collectedInfo.rank) {
       return (
-        <div style={{ verticalAlign: "middle", display: "table-cell" }}>
+        <div
+          style={{
+            display: "table-cell",
+            position: "absolute",
+            minWidth: "100%"
+          }}
+        >
           <Image
-            fluid
+            floated="right"
             style={resultStyle.rank}
-            src={require(`../ranks/${this.props.collectedInfo.rank}.png`)}
+            src={require(`../ranks_transparent/${this.props.collectedInfo
+              .rank}.png`)}
           />
-          <Header size="tiny" textAlign="center" style={resultStyle.rankText}>
-            {rankNames[this.props.collectedInfo.rank - 1]}
-          </Header>
         </div>
       );
+
+      // <Header size="tiny" textAlign="center" style={resultStyle.rankText}>
+      //       {rankNames[this.props.collectedInfo.rank - 1]}
+      //     </Header>
     } else {
       return (
         <div>
@@ -159,6 +172,7 @@ class UserDetail extends Component {
   render() {
     return (
       <Segment
+        clearing
         style={{
           backgroundColor: this.state.hover ? "gainsboro" : "",
           ...resultStyle.segment
@@ -210,17 +224,13 @@ class UserDetail extends Component {
               width={6}
               style={{
                 zIndex: "1",
-                overflow: "hidden",
+                padding: "0px",
                 borderTopRightRadius: ".28571429rem",
                 borderBottomRightRadius: ".28571429rem",
-                paddingLeft: "0px",
-                borderLeft: "4px solid pink",
-                borderRadius: "0.285714rem"
+                top: "10%"
               }}
             >
-              <Grid.Row style={{ display: "table", height: "100%" }}>
-                {this.renderRank()}
-              </Grid.Row>
+              {this.renderRank()}
             </Grid.Column>
 
             <Grid.Row style={resultStyle.bottomRow}>

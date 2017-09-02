@@ -8,7 +8,7 @@ import { Message, Popup } from "semantic-ui-react";
 const searchBarStyle = {
   form: {
     position: "relative",
-    top: "25vh",
+    top: "20vh",
     width: "500px",
     margin: "0 auto"
   },
