@@ -1,26 +1,26 @@
 import React, { Component } from "react";
 import { Segment, Grid, Image, Flag, Icon, Header } from "semantic-ui-react";
 
-const rankNames = [
-  "SILVER I",
-  "SILVER II",
-  "SILVER III",
-  "SILVER IV",
-  "SILVER ELITE",
-  "SILVER ELITE MASTER",
-  "GOLD NOVA I",
-  "GOLD NOVA II",
-  "GOLD NOVA III",
-  "GOLD NOVA MASTER",
-  "MASTER GUARDIAN I",
-  "MASTER GUARDIAN II",
-  "MASTER GUARDIAN ELITE",
-  "DISTINGUISHED MASTER GUARDIAN",
-  "LEGENDARY EAGLE",
-  "LEGENDARY EAGLE MASTER",
-  "SUPREME MASTER FIRST CLASS",
-  "THE GLOBAL ELITE"
-];
+// const rankNames = [
+//   "SILVER I",
+//   "SILVER II",
+//   "SILVER III",
+//   "SILVER IV",
+//   "SILVER ELITE",
+//   "SILVER ELITE MASTER",
+//   "GOLD NOVA I",
+//   "GOLD NOVA II",
+//   "GOLD NOVA III",
+//   "GOLD NOVA MASTER",
+//   "MASTER GUARDIAN I",
+//   "MASTER GUARDIAN II",
+//   "MASTER GUARDIAN ELITE",
+//   "DISTINGUISHED MASTER GUARDIAN",
+//   "LEGENDARY EAGLE",
+//   "LEGENDARY EAGLE MASTER",
+//   "SUPREME MASTER FIRST CLASS",
+//   "THE GLOBAL ELITE"
+// ];
 
 const resultStyle = {
   avatar: {
@@ -145,7 +145,7 @@ class UserDetail extends Component {
           }}
         >
           <Image
-            floated="right"
+            centered
             style={resultStyle.rank}
             src={require(`../ranks_transparent/${this.props.collectedInfo
               .rank}.png`)}

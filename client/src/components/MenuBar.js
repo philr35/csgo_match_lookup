@@ -12,7 +12,45 @@ const menuStyle = {
   }
 };
 
+const rankArray = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18"
+];
+
 class MenuBar extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      images: []
+    };
+  }
+
+  componentDidMount() {
+    this.requireImages();
+  }
+
+  requireImages() {
+    let images = rankArray.map(rank => require(`../ranks/${rank}.png`));
+    this.setState({ images: images });
+  }
+
   renderContent() {
     switch (this.props.auth) {
       case null:
@@ -60,7 +98,7 @@ class MenuBar extends Component {
         <SteamFinder />
 
         {this.renderContent()}
-        <RankModal />
+        <RankModal images={this.state.images} />
       </Menu>
     );
   }

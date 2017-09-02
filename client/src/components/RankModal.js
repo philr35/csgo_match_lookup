@@ -108,10 +108,9 @@ class RankModal extends Component {
 
   renderRankImage() {
     return rankArray.map((rank, index) => {
-      let rankSrc = require(`../ranks/${rank}.png`);
       return (
         <RankImage
-          rankSrc={rankSrc}
+          rankSrc={this.props.images[index]}
           rank={rank}
           handleRank={this.handleRankClick}
           key={index}
