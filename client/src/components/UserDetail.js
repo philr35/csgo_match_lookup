@@ -80,7 +80,8 @@ class UserDetail extends Component {
     this.state = {
       loading: false,
       disabled: false,
-      hover: false
+      hover: false,
+      hoverA: false
     };
 
     this.handleHover = this.handleHover.bind(this);
@@ -89,6 +90,8 @@ class UserDetail extends Component {
     this.renderFlag = this.renderFlag.bind(this);
     this.renderRank = this.renderRank.bind(this);
     this.handlePropagation = this.handlePropagation.bind(this);
+    this.handleHoverAnchor = this.handleHoverAnchor.bind(this);
+    this.handleExitAnchor = this.handleExitAnchor.bind(this);
   }
 
   componentDidMount() {
@@ -105,6 +108,14 @@ class UserDetail extends Component {
 
   handlePropagation(event) {
     event.stopPropagation();
+  }
+
+  handleHoverAnchor(event) {
+    this.setState({ hoverA: true });
+  }
+
+  handleExitAnchor(event) {
+    this.setState({ hoverA: false });
   }
 
   handleHover(event) {
@@ -227,7 +238,8 @@ class UserDetail extends Component {
                 padding: "0px",
                 borderTopRightRadius: ".28571429rem",
                 borderBottomRightRadius: ".28571429rem",
-                top: "10%"
+                top: "10%",
+                left: "1%"
               }}
             >
               {this.renderRank()}
@@ -235,11 +247,14 @@ class UserDetail extends Component {
 
             <Grid.Row style={resultStyle.bottomRow}>
               <a
+                style={{ color: this.state.hoverA ? "red" : "blue" }}
                 id="profileurl"
                 target="_blank"
                 rel="noopener noreferrer"
                 href={this.props.user.profileUrl}
                 onClick={this.handlePropagation}
+                onMouseEnter={this.handleHoverAnchor}
+                onMouseLeave={this.handleExitAnchor}
               >
                 Steam Community Profile
               </a>
