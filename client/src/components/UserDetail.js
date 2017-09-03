@@ -1,26 +1,34 @@
 import React, { Component } from "react";
-import { Segment, Grid, Image, Flag, Icon, Header } from "semantic-ui-react";
+import {
+  Segment,
+  Grid,
+  Image,
+  Flag,
+  Icon,
+  Header,
+  Label
+} from "semantic-ui-react";
 
-// const rankNames = [
-//   "SILVER I",
-//   "SILVER II",
-//   "SILVER III",
-//   "SILVER IV",
-//   "SILVER ELITE",
-//   "SILVER ELITE MASTER",
-//   "GOLD NOVA I",
-//   "GOLD NOVA II",
-//   "GOLD NOVA III",
-//   "GOLD NOVA MASTER",
-//   "MASTER GUARDIAN I",
-//   "MASTER GUARDIAN II",
-//   "MASTER GUARDIAN ELITE",
-//   "DISTINGUISHED MASTER GUARDIAN",
-//   "LEGENDARY EAGLE",
-//   "LEGENDARY EAGLE MASTER",
-//   "SUPREME MASTER FIRST CLASS",
-//   "THE GLOBAL ELITE"
-// ];
+const rankNames = [
+  "S1",
+  "S2",
+  "S3",
+  "S4",
+  "SE",
+  "SEM",
+  "GN1",
+  "GN2",
+  "GN3",
+  "GNM",
+  "MG1",
+  "MG2",
+  "MGE",
+  "DMG",
+  "LE",
+  "LEM",
+  "SUPREME",
+  "GLOBAL"
+];
 
 const resultStyle = {
   avatar: {
@@ -58,9 +66,10 @@ const resultStyle = {
   },
   rank: {
     zIndex: "2",
-    filter: "grayscale(0.5)",
     opacity: "0.4",
-    marginRight: "6px"
+    filter: "drop-shadow(black 0px 0px 1px)",
+    marginTop: "7px",
+    marginLeft: "4px"
   },
   rankText: {
     margin: "25px 0px 0px",
@@ -81,7 +90,8 @@ class UserDetail extends Component {
       loading: false,
       disabled: false,
       hover: false,
-      hoverA: false
+      hoverA: false,
+      opacity: true
     };
 
     this.handleHover = this.handleHover.bind(this);
@@ -119,11 +129,11 @@ class UserDetail extends Component {
   }
 
   handleHover(event) {
-    this.setState({ hover: true });
+    this.setState({ hover: true, opacity: false });
   }
 
   handleExit(event) {
-    this.setState({ hover: false });
+    this.setState({ hover: false, opacity: true });
   }
 
   changeLocation(event) {
@@ -131,35 +141,35 @@ class UserDetail extends Component {
     setTimeout(() => {
       window.location.href = `${window.location.href}livematch/${this.props.user
         .id}`;
-    }, 1000);
+    }, 500);
   }
 
   renderRank() {
     if (this.props.collectedInfo.rank) {
       return (
-        <div
-          style={{
-            display: "table-cell",
-            position: "absolute",
-            minWidth: "100%"
-          }}
-        >
+        <div>
           <Image
-            centered
-            style={resultStyle.rank}
+            id="rank"
+            style={{
+              ...resultStyle.rank,
+              opacity: !this.state.opacity ? "1" : "0.4"
+            }}
             src={require(`../ranks_transparent/${this.props.collectedInfo
               .rank}.png`)}
           />
         </div>
       );
-
-      // <Header size="tiny" textAlign="center" style={resultStyle.rankText}>
-      //       {rankNames[this.props.collectedInfo.rank - 1]}
-      //     </Header>
     } else {
       return (
         <div>
-          <Header size="tiny" textAlign="center" style={resultStyle.rankText}>
+          <Header
+            size="tiny"
+            textAlign="center"
+            style={{
+              ...resultStyle.rankText,
+              opacity: !this.state.opacity ? "1" : "0.4"
+            }}
+          >
             NOT RANKED
           </Header>
         </div>
@@ -183,9 +193,8 @@ class UserDetail extends Component {
   render() {
     return (
       <Segment
-        clearing
         style={{
-          backgroundColor: this.state.hover ? "gainsboro" : "",
+          backgroundColor: this.state.hover ? "ghostwhite" : "",
           ...resultStyle.segment
         }}
         onMouseEnter={this.handleHover}
@@ -195,11 +204,11 @@ class UserDetail extends Component {
         disabled={this.state.disabled}
         className="persona"
       >
-        <Grid>
+        <Grid divided>
           <Grid.Row
             style={{
               ...resultStyle.row,
-              margin: "2px"
+              margin: "6px"
             }}
           >
             <Grid.Column width={3} style={resultStyle.avatar}>
@@ -209,14 +218,16 @@ class UserDetail extends Component {
               />
             </Grid.Column>
 
-            <Grid.Column width={7} style={resultStyle.persona}>
+            <Grid.Column width={8} style={resultStyle.persona}>
               <Grid.Row style={resultStyle.row}>
                 <Header
                   size="medium"
                   inverted
                   style={{
                     color: "rgb(66, 111, 158)",
-                    whiteSpace: "nowrap"
+                    whiteSpace: "nowrap",
+                    marginRight: "14px",
+                    overflow: "hidden"
                   }}
                 >
                   {this.props.user.persona}
@@ -232,16 +243,28 @@ class UserDetail extends Component {
             </Grid.Column>
 
             <Grid.Column
-              width={6}
+              width={5}
               style={{
                 zIndex: "1",
                 padding: "0px",
                 borderTopRightRadius: ".28571429rem",
-                borderBottomRightRadius: ".28571429rem",
-                top: "10%",
-                left: "1%"
+                borderBottomRightRadius: ".28571429rem"
               }}
             >
+              <Label
+                image
+                color="blue"
+                as="a"
+                size="small"
+                style={{ marginLeft: "0px", borderRadius: "0px" }}
+              >
+                9/3/2017
+                <Label.Detail>
+                  {this.props.collectedInfo.rank
+                    ? rankNames[this.props.collectedInfo.rank - 1]
+                    : "None"}
+                </Label.Detail>
+              </Label>
               {this.renderRank()}
             </Grid.Column>
 

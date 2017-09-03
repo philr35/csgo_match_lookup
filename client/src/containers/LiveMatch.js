@@ -1,6 +1,6 @@
 import _ from "lodash";
 import React, { Component } from "react";
-import { Container } from "semantic-ui-react";
+import { Container, Loader, Dimmer } from "semantic-ui-react";
 import axios from "axios";
 
 class LiveMatch extends Component {
@@ -16,6 +16,7 @@ class LiveMatch extends Component {
     this.fetchMatchInfo = this.fetchMatchInfo.bind(this);
 
     this.renderContent = this.renderContent.bind(this);
+    this.renderLoader = this.renderLoader.bind(this);
   }
 
   componentDidMount() {
@@ -29,11 +30,26 @@ class LiveMatch extends Component {
       steamid: this.state.id
     });
 
-    if (!_.isEmpty(matchinfo.data)) {
-      matchinfoArray.push(matchinfo.data);
-      this.setState({ matchinfo: matchinfoArray, fetched: true });
+    //JUST DELAYING IT A BIT
+    setTimeout(() => {
+      if (!_.isEmpty(matchinfo.data)) {
+        matchinfoArray.push(matchinfo.data);
+        this.setState({ matchinfo: matchinfoArray, fetched: true });
+      } else {
+        this.setState({ matchinfo: [], fetched: true });
+      }
+    }, 3000);
+  }
+
+  renderLoader() {
+    if (!this.state.fetched) {
+      return (
+        <Loader active size="massive" inverted>
+          Fetching User Data...
+        </Loader>
+      );
     } else {
-      this.setState({ matchinfo: [], fetched: true });
+      return;
     }
   }
 
@@ -51,6 +67,9 @@ class LiveMatch extends Component {
   render() {
     return (
       <Container>
+        <Dimmer active={!this.state.fetched} blurring>
+          {this.renderLoader()}
+        </Dimmer>
         {this.renderContent()}
       </Container>
     );
