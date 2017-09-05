@@ -46,8 +46,7 @@ const resultStyle = {
     borderRight: "6px solid grey"
   },
   persona: {
-    overflow: "hidden",
-    padding: "10px"
+    overflow: "hidden"
   },
   flag: {
     paddingLeft: "10px"
@@ -99,6 +98,7 @@ class UserDetail extends Component {
     this.handlePropagation = this.handlePropagation.bind(this);
     this.handleHoverAnchor = this.handleHoverAnchor.bind(this);
     this.handleExitAnchor = this.handleExitAnchor.bind(this);
+    this.renderPersona = this.renderPersona.bind(this);
   }
 
   componentDidMount() {
@@ -186,6 +186,50 @@ class UserDetail extends Component {
     }
   }
 
+  renderPersona() {
+    return (
+      <Grid style={{ marginTop: "0px" }}>
+        <Grid.Row style={{ padding: "0px", paddingTop: "10px" }}>
+          <Grid.Column
+            width={11}
+            style={{ padding: "0px", paddingLeft: "18px" }}
+          >
+            <Header
+              size="medium"
+              inverted
+              style={{
+                color: "rgb(66, 111, 158)",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                paddingTop: "2px",
+                marginRight: "4px"
+              }}
+            >
+              {this.props.user.persona}
+            </Header>
+          </Grid.Column>
+          <Grid.Column width={4} style={{ padding: "0px" }}>
+            <Header
+              floated="left"
+              size="tiny"
+              style={{
+                whiteSpace: "nowrap",
+                padding: "0px",
+                paddingTop: "2px"
+              }}
+            >
+              <Icon
+                name="time"
+                style={{ transform: "scale(.7)", margin: "0px" }}
+              />
+              {Math.floor(this.props.user.minutesPlayedForever / 60) + "h"}
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
+  }
+
   render() {
     return (
       <Segment
@@ -216,26 +260,10 @@ class UserDetail extends Component {
 
             <Grid.Column width={8} style={resultStyle.persona}>
               <Grid.Row style={resultStyle.row}>
-                <Header
-                  size="medium"
-                  inverted
-                  style={{
-                    color: "rgb(66, 111, 158)",
-                    whiteSpace: "nowrap",
-                    marginRight: "14px",
-                    overflow: "hidden"
-                  }}
-                >
-                  {this.props.user.persona}
-                </Header>
+                {this.renderPersona()}
               </Grid.Row>
 
-              <Grid.Row style={resultStyle.hours}>
-                <Header size="large" style={{ whiteSpace: "nowrap" }}>
-                  {Math.floor(this.props.user.minutesPlayedForever / 60) +
-                    " hours played"}
-                </Header>
-              </Grid.Row>
+              <Grid.Row style={resultStyle.hours} />
             </Grid.Column>
 
             <Grid.Column
