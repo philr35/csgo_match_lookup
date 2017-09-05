@@ -65,8 +65,6 @@ const resultStyle = {
     paddingTop: "6.5px"
   },
   rank: {
-    zIndex: "2",
-    opacity: "0.4",
     filter: "drop-shadow(black 0px 0px 1px)",
     marginTop: "7px",
     marginLeft: "4px"
@@ -90,8 +88,7 @@ class UserDetail extends Component {
       loading: false,
       disabled: false,
       hover: false,
-      hoverA: false,
-      opacity: true
+      hoverA: false
     };
 
     this.handleHover = this.handleHover.bind(this);
@@ -129,11 +126,11 @@ class UserDetail extends Component {
   }
 
   handleHover(event) {
-    this.setState({ hover: true, opacity: false });
+    this.setState({ hover: true });
   }
 
   handleExit(event) {
-    this.setState({ hover: false, opacity: true });
+    this.setState({ hover: false });
   }
 
   changeLocation(event) {
@@ -151,8 +148,7 @@ class UserDetail extends Component {
           <Image
             id="rank"
             style={{
-              ...resultStyle.rank,
-              opacity: !this.state.opacity ? "1" : "0.4"
+              ...resultStyle.rank
             }}
             src={require(`../ranks_transparent/${this.props.collectedInfo
               .rank}.png`)}
@@ -194,7 +190,7 @@ class UserDetail extends Component {
     return (
       <Segment
         style={{
-          backgroundColor: this.state.hover ? "ghostwhite" : "",
+          backgroundColor: this.state.hover ? "rgb(237, 237, 237)" : "",
           ...resultStyle.segment
         }}
         onMouseEnter={this.handleHover}
