@@ -48,9 +48,7 @@ const resultStyle = {
   persona: {
     overflow: "hidden"
   },
-  flag: {
-    paddingLeft: "10px"
-  },
+  flag: {},
   row: {
     padding: "0px"
   },
@@ -192,7 +190,7 @@ class UserDetail extends Component {
         <Grid.Row style={{ padding: "0px", paddingTop: "10px" }}>
           <Grid.Column
             width={11}
-            style={{ padding: "0px", paddingLeft: "18px" }}
+            style={{ padding: "0px", paddingLeft: "10px" }}
           >
             <Header
               size="medium"
@@ -291,22 +289,6 @@ class UserDetail extends Component {
               </Label>
               {this.renderRank()}
             </Grid.Column>
-
-            <Grid.Row style={resultStyle.bottomRow}>
-              <a
-                style={{ color: this.state.hoverA ? "red" : "blue" }}
-                id="profileurl"
-                target="_blank"
-                rel="noopener noreferrer"
-                href={this.props.user.profileUrl}
-                onClick={this.handlePropagation}
-                onMouseEnter={this.handleHoverAnchor}
-                onMouseLeave={this.handleExitAnchor}
-              >
-                Steam Community Profile
-              </a>
-              {this.renderFlag()}
-            </Grid.Row>
           </Grid.Row>
         </Grid>
       </Segment>
@@ -315,3 +297,19 @@ class UserDetail extends Component {
 }
 
 export default UserDetail;
+
+// <Grid.Row style={resultStyle.bottomRow}>
+//               <a
+//                 style={{ color: this.state.hoverA ? "red" : "blue" }}
+//                 id="profileurl"
+//                 target="_blank"
+//                 rel="noopener noreferrer"
+//                 href={this.props.user.profileUrl}
+//                 onClick={this.handlePropagation}
+//                 onMouseEnter={this.handleHoverAnchor}
+//                 onMouseLeave={this.handleExitAnchor}
+//               >
+//                 Steam Community Profile
+//               </a>
+//               {this.renderFlag()}
+//             </Grid.Row>

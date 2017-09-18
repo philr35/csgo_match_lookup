@@ -3,7 +3,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import UserDetail from "../components/UserDetail";
-import { Message, Popup } from "semantic-ui-react";
+import UserMessage from "../components/UserMessage";
+import { Popup } from "semantic-ui-react";
 
 const searchBarStyle = {
   form: {
@@ -216,32 +217,16 @@ class SearchBar extends Component {
   }
 
   renderMessage() {
-    if (
-      (this.state.showMessage || this.state.warning) &&
-      this.state.visible &&
-      (this.state.persistMessage || this.state.persistWarning) &&
-      !this.state.bySteamId
-    ) {
-      return (
-        <Message
-          info
-          style={searchBarStyle.message}
-          header={
-            this.state.warning
-              ? "This username was not found in our database"
-              : "Not the user you're looking for?"
-          }
-          content={
-            this.state.warning
-              ? "Try entering their steam ID instead"
-              : "Enter your steam ID instead."
-          }
-          onDismiss={this.handleDismiss}
-          color="brown"
-        />
-      );
-    }
-    return;
+    return (
+      <UserMessage
+        showMessage={this.state.showMessage}
+        warning={this.state.warning}
+        visible={this.state.visible}
+        persistMessage={this.state.persistMessage}
+        persistWarning={this.state.persistWarning}
+        bySteamId={this.state.bySteamId}
+      />
+    );
   }
 
   render() {

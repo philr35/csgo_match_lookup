@@ -30,6 +30,8 @@ class LiveMatch extends Component {
       steamid: this.state.id
     });
 
+    console.log(matchinfo);
+
     //JUST DELAYING IT A BIT
     setTimeout(() => {
       if (!_.isEmpty(matchinfo.data)) {
