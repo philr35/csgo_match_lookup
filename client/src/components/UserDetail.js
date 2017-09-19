@@ -1,36 +1,14 @@
 import React, { Component } from "react";
-import {
-  Segment,
-  Grid,
-  Image,
-  Flag,
-  Icon,
-  Header,
-  Label
-} from "semantic-ui-react";
+import { Segment, Grid, Image } from "semantic-ui-react";
 
-const rankNames = [
-  "S1",
-  "S2",
-  "S3",
-  "S4",
-  "SE",
-  "SEM",
-  "GN1",
-  "GN2",
-  "GN3",
-  "GNM",
-  "MG1",
-  "MG2",
-  "MGE",
-  "DMG",
-  "LE",
-  "LEM",
-  "SUPREME",
-  "GLOBAL"
-];
+import UserPersona from "./UserPersona";
+import UserRank from "./UserRank";
 
 const resultStyle = {
+  row: {
+    padding: "0px",
+    margin: "6px"
+  },
   avatar: {
     padding: "10px",
     borderBottomLeftRadius: ".28571429rem",
@@ -45,35 +23,14 @@ const resultStyle = {
     overflow: "hidden",
     borderRight: "6px solid grey"
   },
-  persona: {
+  personaCol: {
     overflow: "hidden"
   },
-  flag: {},
-  row: {
-    padding: "0px"
-  },
-  bottomRow: {
-    position: "absolute",
-    bottom: "4px",
+  rankCol: {
+    zIndex: "1",
     padding: "0px",
-    marginLeft: "105px"
-  },
-  hours: {
-    paddingTop: "6.5px"
-  },
-  rank: {
-    filter: "drop-shadow(black 0px 0px 1px)",
-    marginTop: "7px",
-    marginLeft: "4px"
-  },
-  rankText: {
-    margin: "25px 0px 0px",
-    color: "white",
-    zIndex: "3",
-    textAlign: "center",
-    textRendering: "optimizeLegibility",
-    backgroundColor: "black",
-    opacity: "0.4"
+    borderTopRightRadius: ".28571429rem",
+    borderBottomRightRadius: ".28571429rem"
   }
 };
 
@@ -91,12 +48,9 @@ class UserDetail extends Component {
     this.handleHover = this.handleHover.bind(this);
     this.handleExit = this.handleExit.bind(this);
     this.changeLocation = this.changeLocation.bind(this);
-    this.renderFlag = this.renderFlag.bind(this);
-    this.renderRank = this.renderRank.bind(this);
     this.handlePropagation = this.handlePropagation.bind(this);
     this.handleHoverAnchor = this.handleHoverAnchor.bind(this);
     this.handleExitAnchor = this.handleExitAnchor.bind(this);
-    this.renderPersona = this.renderPersona.bind(this);
   }
 
   componentDidMount() {
@@ -140,91 +94,29 @@ class UserDetail extends Component {
   }
 
   renderRank() {
-    if (this.props.collectedInfo.rank) {
-      return (
-        <div>
-          <Image
-            id="rank"
-            style={{
-              ...resultStyle.rank
-            }}
-            src={require(`../ranks_transparent/${this.props.collectedInfo
-              .rank}.png`)}
-          />
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <Header
-            size="tiny"
-            textAlign="center"
-            style={{
-              ...resultStyle.rankText,
-              opacity: !this.state.opacity ? "1" : "0.4"
-            }}
-          >
-            NOT RANKED
-          </Header>
-        </div>
-      );
-    }
-  }
-
-  renderFlag() {
-    if (this.props.user.countryCode) {
-      return (
-        <Flag
-          name={this.props.user.countryCode.toLowerCase()}
-          style={resultStyle.flag}
-        />
-      );
-    } else {
-      return <Icon name="question" style={resultStyle.flag} />;
-    }
+    return (
+      <UserRank
+        rank={this.props.collectedInfo.rank}
+        rankDate={this.props.collectedInfo.rankDate}
+      />
+    );
   }
 
   renderPersona() {
     return (
-      <Grid style={{ marginTop: "0px" }}>
-        <Grid.Row style={{ padding: "0px", paddingTop: "10px" }}>
-          <Grid.Column
-            width={11}
-            style={{ padding: "0px", paddingLeft: "10px" }}
-          >
-            <Header
-              size="medium"
-              inverted
-              style={{
-                color: "rgb(66, 111, 158)",
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                paddingTop: "2px",
-                marginRight: "4px"
-              }}
-            >
-              {this.props.user.persona}
-            </Header>
-          </Grid.Column>
-          <Grid.Column width={4} style={{ padding: "0px" }}>
-            <Header
-              floated="left"
-              size="tiny"
-              style={{
-                whiteSpace: "nowrap",
-                padding: "0px",
-                paddingTop: "2px"
-              }}
-            >
-              <Icon
-                name="time"
-                style={{ transform: "scale(.7)", margin: "0px" }}
-              />
-              {Math.floor(this.props.user.minutesPlayedForever / 60) + "h"}
-            </Header>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <UserPersona
+        persona={this.props.user.persona}
+        playtime={this.props.user.minutesPlayedForever}
+      />
+    );
+  }
+
+  renderAvatar() {
+    return (
+      <Image
+        src={this.props.user.avatar}
+        style={{ filter: "drop-shadow(0px 0px 1px black)" }}
+      />
     );
   }
 
@@ -243,50 +135,15 @@ class UserDetail extends Component {
         className="persona"
       >
         <Grid divided>
-          <Grid.Row
-            style={{
-              ...resultStyle.row,
-              margin: "6px"
-            }}
-          >
+          <Grid.Row style={resultStyle.row}>
             <Grid.Column width={3} style={resultStyle.avatar}>
-              <Image
-                src={this.props.user.avatar}
-                style={{ filter: "drop-shadow(0px 0px 1px black)" }}
-              />
+              {this.renderAvatar()}
             </Grid.Column>
 
-            <Grid.Column width={8} style={resultStyle.persona}>
-              <Grid.Row style={resultStyle.row}>
-                {this.renderPersona()}
-              </Grid.Row>
-
-              <Grid.Row style={resultStyle.hours} />
+            <Grid.Column width={8} style={resultStyle.personaCol}>
+              {this.renderPersona()}
             </Grid.Column>
-
-            <Grid.Column
-              width={5}
-              style={{
-                zIndex: "1",
-                padding: "0px",
-                borderTopRightRadius: ".28571429rem",
-                borderBottomRightRadius: ".28571429rem"
-              }}
-            >
-              <Label
-                image
-                color="blue"
-                as="a"
-                size="small"
-                style={{ marginLeft: "0px", borderRadius: "0px" }}
-              >
-                9/3/2017
-                <Label.Detail>
-                  {this.props.collectedInfo.rank
-                    ? rankNames[this.props.collectedInfo.rank - 1]
-                    : "None"}
-                </Label.Detail>
-              </Label>
+            <Grid.Column width={5} style={resultStyle.rankCol}>
               {this.renderRank()}
             </Grid.Column>
           </Grid.Row>
@@ -313,3 +170,16 @@ export default UserDetail;
 //               </a>
 //               {this.renderFlag()}
 //             </Grid.Row>
+
+// renderFlag() {
+//   if (this.props.user.countryCode) {
+//     return (
+//       <Flag
+//         name={this.props.user.countryCode.toLowerCase()}
+//         style={resultStyle.flag}
+//       />
+//     );
+//   } else {
+//     return <Icon name="question" style={resultStyle.flag} />;
+//   }
+// }

@@ -63,9 +63,18 @@ class RankModal extends Component {
       !!(this.state.rankPicked ^ this.state.checkedUnranked) &&
       this.state.checkedTos
     ) {
+      var date = new Date();
+      let dateStr =
+        date.getMonth().toString() +
+        "/" +
+        date.getDate().toString() +
+        "/" +
+        date.getFullYear().toString().slice(2);
+
       await axios.post("/api/updaterank", {
         id: this.props.auth.steamInfo.id,
-        rank: this.state.currentClickedRank
+        rank: this.state.currentClickedRank,
+        rankDate: dateStr
       });
       this.setState({ modalOpen: false });
     }

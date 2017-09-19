@@ -41,15 +41,10 @@ module.exports = app => {
   });
 
   app.post("/api/current_user/matchinfo", middleware.isLoggedIn, (req, res) => {
-    console.log("first: " + req.body.steamid);
     CSGO.setSteamId(req.body.steamid);
     CSGO.steamLogon(match => {
       res.json(match);
     });
-  });
-
-  app.get("/api/current_user/game", (req, res) => {
-    res.send(req.user);
   });
 
   app.post("/api/fetchbypersona", async (req, res) => {
@@ -104,6 +99,7 @@ module.exports = app => {
           console.log(err);
         } else {
           doc.collectedInfo.rank = req.body.rank;
+          doc.collectedInfo.rankDate = req.body.rankDate;
           doc.save();
         }
       }

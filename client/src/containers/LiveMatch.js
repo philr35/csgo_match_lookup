@@ -69,7 +69,7 @@ class LiveMatch extends Component {
   render() {
     return (
       <Container>
-        <Dimmer active={!this.state.fetched} blurring>
+        <Dimmer active={!this.state.fetched}>
           {this.renderLoader()}
         </Dimmer>
         {this.renderContent()}

@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import UserDetail from "../components/UserDetail";
-import UserMessage from "../components/UserMessage";
 import { Popup } from "semantic-ui-react";
 
 const searchBarStyle = {
@@ -37,18 +36,12 @@ class SearchBar extends Component {
       userArrayCollectedInfo: [],
       initializedInput: false,
       userNotFound: false,
-      showMessage: false,
-      persistMessage: true,
-      visible: true,
-      warning: false,
-      persistWarning: true,
-      bySteamId: false
+      bySteamId: false,
+      loading: false
     };
+
     this.onInputChange = this.onInputChange.bind(this);
     this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.renderResults = this.renderResults.bind(this);
-    this.userSearch = this.userSearch.bind(this);
-    this.handleDismiss = this.handleDismiss.bind(this);
   }
 
   componentDidUpdate() {
@@ -80,18 +73,10 @@ class SearchBar extends Component {
     //THROTTLES THE SEARCH SUBMIT
     this.delayedCallback = _.debounce(term => {
       if (term) {
-        this.toggleLoading(true);
+        this.setState({ loading: true });
         this.userSearch(term);
       }
     }, 650);
-  }
-
-  toggleLoading(toggle) {
-    if (toggle) {
-      document.querySelector(".ui.icon.input").className += " loading";
-    } else {
-      document.querySelector(".ui.icon.input").classList.remove("loading");
-    }
   }
 
   onInputChange(event) {
@@ -123,15 +108,6 @@ class SearchBar extends Component {
         userArray.push(user.steamInfo);
         collectedInfo.push(user.collectedInfo);
       });
-
-      if (userArray.length > 0) {
-        this.setState({ warning: false });
-        setTimeout(() => {
-          this.setState({ showMessage: true });
-        }, 5000);
-      } else {
-        this.setState({ warning: true });
-      }
     }
 
     //IF USERARRAY IS EMPTY THEN MONGO COULDNT FIND USER THEN RESETS
@@ -150,20 +126,13 @@ class SearchBar extends Component {
     }
 
     setTimeout(() => {
-      this.toggleLoading(false);
+      this.setState({ loading: false });
     }, 350);
   }
 
   onFormSubmit(event) {
     event.preventDefault();
   }
-
-  handleDismiss = () => {
-    this.setState({
-      visible: false,
-      persistMessage: false
-    });
-  };
 
   renderResults() {
     if (this.state.userArraySteamInfo.length > 0) {
@@ -191,7 +160,6 @@ class SearchBar extends Component {
       <input
         id="searchInput"
         style={searchBarStyle.input}
-        className="inverted"
         type="text"
         placeholder="Search up live CSGO matches"
         value={this.state.term}
@@ -216,32 +184,18 @@ class SearchBar extends Component {
     }
   }
 
-  renderMessage() {
-    return (
-      <UserMessage
-        showMessage={this.state.showMessage}
-        warning={this.state.warning}
-        visible={this.state.visible}
-        persistMessage={this.state.persistMessage}
-        persistWarning={this.state.persistWarning}
-        bySteamId={this.state.bySteamId}
-      />
-    );
-  }
-
   render() {
     return (
       <div>
-        <form
-          action="/api/fetchuser"
-          onSubmit={this.onFormSubmit}
-          style={searchBarStyle.form}
-        >
-          <div className="ui icon input">
+        <form onSubmit={this.onFormSubmit} style={searchBarStyle.form}>
+          <div
+            className={
+              this.state.loading ? "ui icon input loading" : "ui icon input"
+            }
+          >
             {this.renderInput()}
             <i aria-hidden="true" className="search icon" />
           </div>
-          {this.renderMessage()}
           <div className="results" style={searchBarStyle.segment}>
             {this.renderResults()}
           </div>

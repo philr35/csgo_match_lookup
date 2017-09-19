@@ -17,7 +17,8 @@ const userSchema = new Schema({
   },
   collectedInfo: {
     rank: String,
-    reports: String
+    rankDate: String,
+    reputation: Number
   }
 });
 

@@ -41,6 +41,8 @@ class UserMessage extends Component {
           color="brown"
         />
       );
+    } else {
+      console.log("ERROR");
     }
   }
 

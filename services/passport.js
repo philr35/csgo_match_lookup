@@ -48,7 +48,7 @@ passport.use(
           playerBans: 0,
           friends: []
         },
-        collectedInfo: { rank: "", reports: "0" }
+        collectedInfo: { rank: "", rankDate: "", reputation: 0 }
       }).save();
 
       return done(null, user);
